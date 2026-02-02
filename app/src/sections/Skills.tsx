@@ -102,7 +102,6 @@ export default function Skills() {
       // Progress bars animation
       barsRef.current.forEach((bar, i) => {
         if (bar) {
-          const skillIndex = skills.findIndex(s => s === filteredSkills[i]);
           scrollTriggers.push(
             ScrollTrigger.create({
               trigger: bar,
