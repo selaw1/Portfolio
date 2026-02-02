@@ -19,11 +19,6 @@ section {
   transform-style: preserve-3d;
 }
 
-/* Custom hover scale for project images */
-.group-hover\:scale-108:hover {
-  transform: scale(1.08);
-}
-
 /* Animation utilities */
 @keyframes float {
   0%, 100% {
@@ -43,34 +38,96 @@ section {
   }
 }
 
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
 
 .animate-float-delayed {
-  animation: float-delayed 8s ease-in-out infinite;
-  animation-delay: -2s;
+  animation: float-delayed 7s ease-in-out infinite;
 }
 
-/* Glow animation */
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(0, 112, 160, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(0, 112, 160, 0.5);
-  }
+.animate-shimmer {
+  animation: shimmer 2s infinite;
 }
 
 .animate-pulse-glow {
-  animation: pulse-glow 4s ease-in-out infinite;
+  animation: pulse-glow 3s ease-in-out infinite;
 }
 
-/* Glassmorphism */
+.animate-bounce {
+  animation: bounce 2s ease-in-out infinite;
+}
+
+/* Glassmorphism effect */
 .glass {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.dark .glass {
+  background: rgba(31, 31, 31, 0.8);
+}
+
+/* Custom shadows */
+.shadow-soft {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-card {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.shadow-card-hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.shadow-large {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-glow-lg {
+  box-shadow: 0 8px 30px rgba(0, 112, 160, 0.3);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Grid line animations */
+.grid-line {
+  transform-origin: left;
 }
 
 /* Transition utilities */

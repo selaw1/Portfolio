@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Linkedin, Github, Mail, Heart } from 'lucide-react';
+import { Linkedin, Github, Mail, Heart, Code2 } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,92 +16,26 @@ const navLinks = [
 const socialLinks = [
   { icon: Linkedin, label: 'LinkedIn', href: 'https://linkedin.com/in/yousef-alselawi' },
   { icon: Github, label: 'GitHub', href: 'https://github.com/selaw1' },
+  { icon: Mail, label: 'Email', href: 'mailto:yusef.alslawi@gmail.com' },
 ];
 
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);
-  const logoRef = useRef<HTMLAnchorElement>(null);
-  const taglineRef = useRef<HTMLParagraphElement>(null);
-  const columnsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       const scrollTriggers: ScrollTrigger[] = [];
 
-      // Logo
       scrollTriggers.push(
         ScrollTrigger.create({
           trigger: footerRef.current,
           start: 'top 90%',
           onEnter: () => {
             gsap.fromTo(
-              logoRef.current,
-              { scale: 0.9, opacity: 0 },
-              { scale: 1, opacity: 1, duration: 0.5, ease: 'expo.out' }
-            );
-          },
-          once: true
-        })
-      );
-
-      // Tagline
-      scrollTriggers.push(
-        ScrollTrigger.create({
-          trigger: taglineRef.current,
-          start: 'top 95%',
-          onEnter: () => {
-            gsap.fromTo(
-              taglineRef.current,
-              { y: 20, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.4, ease: 'expo.out', delay: 0.1 }
-            );
-          },
-          once: true
-        })
-      );
-
-      // Columns
-      columnsRef.current.forEach((col, i) => {
-        if (col) {
-          scrollTriggers.push(
-            ScrollTrigger.create({
-              trigger: col,
-              start: 'top 95%',
-              onEnter: () => {
-                const title = col.querySelector('h4');
-                const links = col.querySelectorAll('a');
-                
-                if (title) {
-                  gsap.fromTo(
-                    title,
-                    { opacity: 0 },
-                    { opacity: 1, duration: 0.3, ease: 'expo.out', delay: 0.2 + i * 0.1 }
-                  );
-                }
-                
-                gsap.fromTo(
-                  links,
-                  { opacity: 0, y: 10 },
-                  { opacity: 1, y: 0, duration: 0.25, ease: 'expo.out', stagger: 0.05, delay: 0.25 + i * 0.1 }
-                );
-              },
-              once: true
-            })
-          );
-        }
-      });
-
-      // Bottom bar
-      scrollTriggers.push(
-        ScrollTrigger.create({
-          trigger: bottomRef.current,
-          start: 'top 98%',
-          onEnter: () => {
-            gsap.fromTo(
-              bottomRef.current,
-              { opacity: 0 },
-              { opacity: 1, duration: 0.4, ease: 'smooth', delay: 0.6 }
+              contentRef.current,
+              { opacity: 0, y: 30 },
+              { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }
             );
           },
           once: true
@@ -127,90 +61,66 @@ export default function Footer() {
   return (
     <footer
       ref={footerRef}
-      className="relative bg-white dark:bg-brand-black border-t border-brand-gray dark:border-brand-dark-gray transition-colors"
+      className="relative py-12 bg-card border-t border-border transition-colors"
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-16">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-16">
-          {/* Brand Column */}
-          <div className="sm:col-span-2 lg:col-span-1">
-            <a
-              ref={logoRef}
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className="inline-block text-2xl font-serif font-bold text-brand-black dark:text-white mb-4 hover:text-brand-primary transition-colors"
-            >
-              Yousef<span className="text-brand-primary">.</span>
-            </a>
-            <p ref={taglineRef} className="text-brand-medium-gray dark:text-brand-light-gray text-sm leading-relaxed transition-colors">
-              Software Engineer building scalable solutions for the future. Specialized in Django, React, and cloud-native architectures.
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div ref={contentRef} className="grid md:grid-cols-3 gap-8 mb-8">
+          {/* Brand */}
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <Code2 className="w-6 h-6 text-primary" />
+              <span className="text-xl font-serif font-bold text-foreground">Yousef Alselawi</span>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Software Engineer building scalable solutions with modern technologies.
             </p>
           </div>
 
-          {/* Navigation Column */}
-          <div ref={(el) => { columnsRef.current[0] = el; }}>
-            <h4 className="text-sm font-semibold text-brand-black dark:text-white uppercase tracking-wider mb-4 transition-colors">
-              Navigation
-            </h4>
-            <ul className="space-y-3">
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-sm font-semibold text-foreground mb-4">Quick Links</h4>
+            <div className="flex flex-col gap-2">
               {navLinks.map((link) => (
-                <li key={link.label}>
-                  <a
-                    href={link.href}
-                    onClick={(e) => scrollToSection(e, link.href)}
-                    className="text-brand-medium-gray dark:text-brand-light-gray hover:text-brand-primary hover:translate-x-1 transition-all duration-200 inline-block"
-                  >
-                    {link.label}
-                  </a>
-                </li>
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={(e) => scrollToSection(e, link.href)}
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  {link.label}
+                </a>
               ))}
-            </ul>
+            </div>
           </div>
 
-          {/* Connect Column */}
-          <div ref={(el) => { columnsRef.current[1] = el; }}>
-            <h4 className="text-sm font-semibold text-brand-black dark:text-white uppercase tracking-wider mb-4 transition-colors">
-              Connect
-            </h4>
-            <ul className="space-y-3">
-              {socialLinks.map((link) => (
-                <li key={link.label}>
+          {/* Social */}
+          <div>
+            <h4 className="text-sm font-semibold text-foreground mb-4">Connect</h4>
+            <div className="flex gap-3">
+              {socialLinks.map((social) => {
+                const Icon = social.icon;
+                return (
                   <a
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-brand-medium-gray dark:text-brand-light-gray hover:text-brand-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"
+                    key={social.label}
+                    href={social.href}
+                    target={social.href.startsWith('http') ? '_blank' : undefined}
+                    rel={social.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    className="w-10 h-10 rounded-full bg-secondary hover:bg-primary/10 flex items-center justify-center hover:text-primary transition-all"
+                    aria-label={social.label}
                   >
-                    <link.icon className="w-4 h-4" />
-                    {link.label}
+                    <Icon className="w-5 h-5" />
                   </a>
-                </li>
-              ))}
-              <li>
-                <a
-                  href="mailto:usefselawi@gmail.com"
-                  className="text-brand-medium-gray dark:text-brand-light-gray hover:text-brand-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"
-                >
-                  <Mail className="w-4 h-4" />
-                  Email
-                </a>
-              </li>
-            </ul>
+                );
+              })}
+            </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div
-          ref={bottomRef}
-          className="mt-12 pt-8 border-t border-brand-gray dark:border-brand-dark-gray flex flex-col sm:flex-row justify-between items-center gap-4"
-        >
-          <p className="text-sm text-brand-light-gray dark:text-brand-medium-gray transition-colors">
-            &copy; {new Date().getFullYear()} Yousef Selawi. All rights reserved.
-          </p>
-          <p className="text-sm text-brand-light-gray dark:text-brand-medium-gray flex items-center gap-1 transition-colors">
-            Built with <Heart className="w-4 h-4 text-brand-pink fill-brand-pink" /> using React
+        <div className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+          <p>© {new Date().getFullYear()} Yousef Alselawi. All rights reserved.</p>
+          <p className="flex items-center gap-1">
+            Built with <Heart className="w-4 h-4 text-primary fill-primary" /> and React
           </p>
         </div>
       </div>

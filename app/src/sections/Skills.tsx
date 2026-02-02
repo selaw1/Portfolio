@@ -1,104 +1,67 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { 
-  Code2, 
-  Layers, 
-  Database, 
-  Wrench,
-  FileCode,
-  Globe,
-  Braces,
-  Server,
-  Cpu,
-  HardDrive,
-  Cloud,
-  GitBranch,
-  Bug,
-  Store,
-  Component,
-  Palette
-} from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const skillCategories = [
-  {
-    title: 'Languages',
-    icon: Code2,
-    color: 'bg-brand-yellow/30',
-    skills: [
-      { name: 'Python', icon: FileCode },
-      { name: 'JavaScript', icon: Globe },
-      { name: 'TypeScript', icon: Braces },
-    ],
-  },
-  {
-    title: 'Frameworks',
-    icon: Layers,
-    color: 'bg-brand-cyan/40',
-    skills: [
-      { name: 'Django', icon: Server },
-      { name: 'Django Ninja', icon: Cpu },
-      { name: 'React', icon: Component },
-      { name: 'Next.js', icon: Layers },
-    ],
-  },
-  {
-    title: 'Databases',
-    icon: Database,
-    color: 'bg-brand-pink/30',
-    skills: [
-      { name: 'PostgreSQL', icon: Database },
-      { name: 'TimescaleDB', icon: HardDrive },
-    ],
-  },
-  {
-    title: 'Tools & Infrastructure',
-    icon: Wrench,
-    color: 'bg-brand-cream/50',
-    skills: [
-      { name: 'MinIO', icon: Cloud },
-      { name: 'Celery', icon: Cpu },
-      { name: 'RabbitMQ', icon: Server },
-      { name: 'Docker', icon: Cloud },
-      { name: 'Git', icon: GitBranch },
-      { name: 'Sentry', icon: Bug },
-      { name: 'Zustand', icon: Store },
-      { name: 'TanStack', icon: Component },
-      { name: 'Tailwind', icon: Palette },
-      { name: 'shadcn/ui', icon: Component },
-    ],
-  },
+const skills = [
+  // Programming Languages
+  { name: 'Python', category: 'Language', level: 95 },
+  { name: 'JavaScript', category: 'Language', level: 90 },
+  { name: 'TypeScript', category: 'Language', level: 90 },
+  { name: 'HTML', category: 'Language', level: 95 },
+  { name: 'CSS', category: 'Language', level: 90 },
+  { name: 'SCSS', category: 'Language', level: 85 },
+  
+  // Frameworks
+  { name: 'Django', category: 'Framework', level: 95 },
+  { name: 'Django Ninja', category: 'Framework', level: 90 },
+  { name: 'React', category: 'Framework', level: 90 },
+  { name: 'Next.js', category: 'Framework', level: 85 },
+  { name: 'Vite', category: 'Framework', level: 85 },
+  { name: 'Astro', category: 'Framework', level: 75 },
+  
+  // Databases
+  { name: 'PostgreSQL', category: 'Database', level: 90 },
+  { name: 'TimescaleDB', category: 'Database', level: 85 },
+  
+  // Tools & Libraries
+  { name: 'MinIO', category: 'Tools', level: 80 },
+  { name: 'Celery', category: 'Tools', level: 85 },
+  { name: 'RabbitMQ', category: 'Tools', level: 80 },
+  { name: 'LavinMQ', category: 'Tools', level: 75 },
+  { name: 'Zustand', category: 'Tools', level: 85 },
+  { name: 'TanStack Query', category: 'Tools', level: 85 },
+  { name: 'Hey API', category: 'Tools', level: 80 },
+  { name: 'Sentry', category: 'Tools', level: 80 },
+  { name: 'Git', category: 'Tools', level: 90 },
+  
+  // UI Libraries
+  { name: 'Tailwind CSS', category: 'UI', level: 95 },
+  { name: 'Shadcn', category: 'UI', level: 90 },
+  { name: 'DaisyUI', category: 'UI', level: 85 },
+  { name: 'Bootstrap', category: 'UI', level: 85 },
+  
+  // DevOps & OS
+  { name: 'Linux Arch', category: 'OS', level: 85 },
 ];
+
+const categories = Array.from(new Set(skills.map(s => s.category)));
 
 export default function Skills() {
   const sectionRef = useRef<HTMLElement>(null);
-  const labelRef = useRef<HTMLSpanElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
-  const subheadlineRef = useRef<HTMLParagraphElement>(null);
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const tagsRef = useRef<(HTMLSpanElement | null)[][]>([]);
+  const skillsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const barsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+
+  const filteredSkills = selectedCategory === 'All' 
+    ? skills 
+    : skills.filter(skill => skill.category === selectedCategory);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       const scrollTriggers: ScrollTrigger[] = [];
-
-      // Label
-      scrollTriggers.push(
-        ScrollTrigger.create({
-          trigger: sectionRef.current,
-          start: 'top 80%',
-          onEnter: () => {
-            gsap.fromTo(
-              labelRef.current,
-              { opacity: 0, letterSpacing: '0.2em' },
-              { opacity: 1, letterSpacing: '0.1em', duration: 0.4, ease: 'expo.out' }
-            );
-          },
-          once: true
-        })
-      );
 
       // Headline
       scrollTriggers.push(
@@ -106,47 +69,28 @@ export default function Skills() {
           trigger: headlineRef.current,
           start: 'top 80%',
           onEnter: () => {
-            const words = headlineRef.current?.querySelectorAll('.word');
-            if (words) {
-              gsap.fromTo(
-                words,
-                { y: 50, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.5, ease: 'expo.out', stagger: 0.1 }
-              );
-            }
-          },
-          once: true
-        })
-      );
-
-      // Subheadline
-      scrollTriggers.push(
-        ScrollTrigger.create({
-          trigger: subheadlineRef.current,
-          start: 'top 85%',
-          onEnter: () => {
             gsap.fromTo(
-              subheadlineRef.current,
-              { y: 20, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.5, ease: 'expo.out' }
+              headlineRef.current,
+              { opacity: 0, y: 30 },
+              { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }
             );
           },
           once: true
         })
       );
 
-      // Category cards with 3D flip
-      cardsRef.current.forEach((card, i) => {
-        if (card) {
+      // Skills with stagger
+      skillsRef.current.forEach((skill, i) => {
+        if (skill) {
           scrollTriggers.push(
             ScrollTrigger.create({
-              trigger: card,
-              start: 'top 85%',
+              trigger: skill,
+              start: 'top 90%',
               onEnter: () => {
                 gsap.fromTo(
-                  card,
-                  { rotateY: -90, opacity: 0 },
-                  { rotateY: 0, opacity: 1, duration: 0.7, ease: 'expo.out', delay: i * 0.15 }
+                  skill,
+                  { opacity: 0, x: -30 },
+                  { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out', delay: i * 0.05 }
                 );
               },
               once: true
@@ -155,32 +99,26 @@ export default function Skills() {
         }
       });
 
-      // Skill tags stagger
-      tagsRef.current.forEach((categoryTags, catIndex) => {
-        categoryTags.forEach((tag, tagIndex) => {
-          if (tag) {
-            scrollTriggers.push(
-              ScrollTrigger.create({
-                trigger: cardsRef.current[catIndex],
-                start: 'top 80%',
-                onEnter: () => {
-                  gsap.fromTo(
-                    tag,
-                    { scale: 0, opacity: 0 },
-                    { 
-                      scale: 1, 
-                      opacity: 1, 
-                      duration: 0.3, 
-                      ease: 'elastic.out(1, 0.5)',
-                      delay: 0.9 + catIndex * 0.15 + tagIndex * 0.04
-                    }
-                  );
-                },
-                once: true
-              })
-            );
-          }
-        });
+      // Progress bars animation
+      barsRef.current.forEach((bar, i) => {
+        if (bar) {
+          const skillIndex = skills.findIndex(s => s === filteredSkills[i]);
+          scrollTriggers.push(
+            ScrollTrigger.create({
+              trigger: bar,
+              start: 'top 90%',
+              onEnter: () => {
+                const level = filteredSkills[i].level;
+                gsap.fromTo(
+                  bar,
+                  { width: '0%' },
+                  { width: `${level}%`, duration: 1.2, ease: 'power2.out', delay: i * 0.05 }
+                );
+              },
+              once: true
+            })
+          );
+        }
       });
 
       return () => {
@@ -189,75 +127,93 @@ export default function Skills() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
-
-  const headlineWords = ['Skills', '&', 'Technologies'];
+  }, [filteredSkills]);
 
   return (
     <section
       id="skills"
       ref={sectionRef}
-      className="relative py-24 lg:py-32 bg-brand-bg-gray dark:bg-brand-dark-gray overflow-hidden transition-colors"
+      className="relative py-24 lg:py-32 bg-background dark:bg-brand-black overflow-hidden transition-colors"
     >
-      {/* Background decoration */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-brand-primary/5 rounded-full blur-2xl" />
-        <div className="absolute bottom-20 right-10 w-40 h-40 bg-brand-cyan/20 rounded-full blur-2xl" />
+      {/* Circuit pattern background */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `
+            linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px),
+            linear-gradient(hsl(var(--border)) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px'
+        }} />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 lg:px-12 relative">
         {/* Header */}
         <div className="text-center mb-16">
-          <span
-            ref={labelRef}
-            className="inline-block text-sm font-semibold text-brand-primary uppercase tracking-widest mb-4"
+          <h2 
+            ref={headlineRef}
+            className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-foreground mb-4"
           >
-            Technical Expertise
-          </span>
-          <h2 ref={headlineRef} className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-brand-black dark:text-white mb-4 transition-colors">
-            {headlineWords.map((word, i) => (
-              <span key={i} className="word inline-block mr-3">
-                {word}
-              </span>
-            ))}
+            Technical <span className="text-primary">Skills</span>
           </h2>
-          <p ref={subheadlineRef} className="text-lg text-brand-medium-gray dark:text-brand-light-gray max-w-2xl mx-auto transition-colors">
-            A comprehensive toolkit built through years of building production-grade applications
+          <div className="w-24 h-1 bg-primary mx-auto mb-6" />
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            A comprehensive toolkit for building modern, scalable applications
           </p>
         </div>
 
-        {/* Skills Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 perspective-1000">
-          {skillCategories.map((category, catIndex) => (
-            <div
-              key={category.title}
-              ref={(el) => { cardsRef.current[catIndex] = el; }}
-              className="group bg-white dark:bg-brand-black rounded-2xl p-6 shadow-card hover:shadow-card-hover hover:-translate-y-2 transition-all duration-300 preserve-3d"
-              style={{ transformStyle: 'preserve-3d' }}
+        {/* Category Filter */}
+        <div className="mb-12 flex flex-wrap justify-center gap-3">
+          <button
+            onClick={() => setSelectedCategory('All')}
+            className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+              selectedCategory === 'All'
+                ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30'
+                : 'bg-card border border-border text-foreground hover:border-primary hover:text-primary'
+            }`}
+          >
+            All
+          </button>
+          {categories.map((cat, i) => (
+            <button
+              key={i}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                selectedCategory === cat
+                  ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30'
+                  : 'bg-card border border-border text-foreground hover:border-primary hover:text-primary'
+              }`}
             >
-              {/* Category Header */}
-              <div className={`w-12 h-12 ${category.color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                <category.icon className="w-6 h-6 text-brand-dark dark:text-white" />
-              </div>
-              <h3 className="text-lg font-serif font-semibold text-brand-black dark:text-white mb-4 transition-colors">
-                {category.title}
-              </h3>
+              {cat}
+            </button>
+          ))}
+        </div>
 
-              {/* Skills */}
-              <div className="flex flex-wrap gap-2">
-                {category.skills.map((skill, skillIndex) => (
-                  <span
-                    key={skill.name}
-                    ref={(el) => {
-                      if (!tagsRef.current[catIndex]) tagsRef.current[catIndex] = [];
-                      tagsRef.current[catIndex][skillIndex] = el;
-                    }}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-bg-gray dark:bg-brand-dark-gray text-brand-dark-gray dark:text-brand-light-gray text-sm font-medium rounded-lg hover:bg-brand-primary hover:text-white hover:scale-105 transition-all duration-200 cursor-default"
-                  >
-                    <skill.icon className="w-3.5 h-3.5" />
-                    {skill.name}
-                  </span>
-                ))}
+        {/* Skills Grid */}
+        <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+          {filteredSkills.map((skill, i) => (
+            <div
+              key={`${skill.name}-${skill.category}`}
+              ref={(el) => { skillsRef.current[i] = el; }}
+              className="group"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                  {skill.name}
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  {skill.category}
+                </span>
+              </div>
+              
+              {/* Progress bar */}
+              <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                <div
+                  ref={(el) => { barsRef.current[i] = el; }}
+                  className="h-full bg-gradient-to-r from-primary to-accent rounded-full relative"
+                  style={{ width: '0%' }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+                </div>
               </div>
             </div>
           ))}
