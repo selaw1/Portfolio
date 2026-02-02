@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 const socialLinks = [
   { icon: Linkedin, label: 'LinkedIn', href: 'https://linkedin.com/in/yousef-alselawi', color: 'hover:text-[#0077b5]' },
   { icon: Github, label: 'GitHub', href: 'https://github.com/selaw1', color: 'hover:text-foreground' },
-  { icon: Mail, label: 'Email', href: 'mailto:yusef.alslawi@gmail.com', color: 'hover:text-primary' },
+  { icon: Mail, label: 'Email', href: 'mailto:me@usefselawi.com', color: 'hover:text-primary' },
 ];
 
 
@@ -126,7 +126,7 @@ export default function Contact() {
         {/* Direct Email CTA */}
         <div className="text-center">
           <a
-            href="mailto:yusef.alslawi@gmail.com"
+            href="mailto:me@usefselawi.com"
             className="group inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-xl hover:shadow-lg hover:shadow-primary/50 hover:-translate-y-1 transition-all duration-300"
           >
             <Send className="w-5 h-5 group-hover:rotate-12 transition-transform" />

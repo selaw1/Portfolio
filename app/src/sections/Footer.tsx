@@ -16,7 +16,7 @@ const navLinks = [
 const socialLinks = [
   { icon: Linkedin, label: 'LinkedIn', href: 'https://linkedin.com/in/yousef-alselawi' },
   { icon: Github, label: 'GitHub', href: 'https://github.com/selaw1' },
-  { icon: Mail, label: 'Email', href: 'mailto:yusef.alslawi@gmail.com' },
+  { icon: Mail, label: 'Email', href: 'mailto:me@usefselawi.com' },
 ];
 
 export default function Footer() {
