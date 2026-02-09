@@ -6,7 +6,7 @@ import { Mail, Linkedin, Github, Send, MapPin } from 'lucide-react';
 gsap.registerPlugin(ScrollTrigger);
 
 const socialLinks = [
-  { icon: Linkedin, label: 'LinkedIn', href: 'https://linkedin.com/in/yousef-alselawi', color: 'hover:text-[#0077b5]' },
+  { icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/yousef-selawi/', color: 'hover:text-[#0077b5]' },
   { icon: Github, label: 'GitHub', href: 'https://github.com/selaw1', color: 'hover:text-foreground' },
   { icon: Mail, label: 'Email', href: 'mailto:yousef@selawii.com', color: 'hover:text-primary' },
 ];

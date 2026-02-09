@@ -14,7 +14,7 @@ const navLinks = [
 ];
 
 const socialLinks = [
-  { icon: Linkedin, label: 'LinkedIn', href: 'https://linkedin.com/in/yousef-alselawi' },
+  { icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/yousef-selawi/' },
   { icon: Github, label: 'GitHub', href: 'https://github.com/selaw1' },
   { icon: Mail, label: 'Email', href: 'mailto:yousef@selawii.com' },
 ];
