@@ -119,14 +119,14 @@ export default function Hero() {
           {/* Status Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 dark:bg-primary/20 border border-primary/20">
             <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            <span className="text-sm font-medium text-primary">Available for opportunities</span>
+            <span className="text-sm font-medium text-primary">Fullstack Developer</span>
           </div>
 
           {/* Main Heading with Glitch Effect */}
           <h1
             ref={glitchRef}
             className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-serif font-bold text-foreground mb-6 relative"
-            data-text="Yousef Alselawi"
+            data-text="Yousef Selawi"
           >
             <span className="text-foreground">Yousef </span>
             <span className="text-primary">Selawi</span>

@@ -16,7 +16,7 @@ const navLinks = [
 const socialLinks = [
   { icon: Linkedin, label: 'LinkedIn', href: 'https://linkedin.com/in/yousef-alselawi' },
   { icon: Github, label: 'GitHub', href: 'https://github.com/selaw1' },
-  { icon: Mail, label: 'Email', href: 'mailto:me@usefselawi.com' },
+  { icon: Mail, label: 'Email', href: 'mailto:yousef@selawii.com' },
 ];
 
 export default function Footer() {
@@ -69,7 +69,7 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Code2 className="w-6 h-6 text-primary" />
-              <span className="text-xl font-serif font-bold text-foreground">Yousef Alselawi</span>
+              <span className="text-xl font-serif font-bold text-foreground">Yousef Selawi</span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Software Engineer building scalable solutions with modern technologies.
@@ -118,7 +118,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} Yousef Alselawi. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Yousef Selawi. All rights reserved.</p>
           <p className="flex items-center gap-1">
             Built with <Heart className="w-4 h-4 text-primary fill-primary" /> and React
           </p>
