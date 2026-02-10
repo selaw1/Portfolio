@@ -15,7 +15,7 @@ const experiences = [
       'Architected dual-database infrastructure using PostgreSQL and TimescaleDB hypertables with continuous aggregates and compression, improving time-series query performance for millions of records',
       'Engineered robust asynchronous pipelines with Celery and RabbitMQ, handling 15+ scheduled jobs for data synchronization, ML model training, and large-scale exports of 1M+ rows',
       'Developed high-performance REST APIs with Django Ninja, JWT authentication, and role-based access control, serving 20+ real-time dashboards',
-      'Implemented secure, enterprise-grade authentication and auditing, including 2FA, LDAP/Active Directory, API key management, and field-level audit logs',
+      'Implemented secure, enterprise-grade authentication and auditing, including 2FA, UAEPass, LDAP/Active Directory, API key management, and field-level audit logs',
       'Optimized database and application performance through indexing, N+1 query elimination, streaming large exports via MinIO',
       'Developed 20+ dynamic, real-time dashboards using React, Zustand, React Query, and Hey API for automatic schema generation',
     ],
