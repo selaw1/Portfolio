@@ -1,143 +1,92 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Mail, Linkedin, Github, Send, MapPin } from 'lucide-react';
+import { Linkedin, Github, Mail, MapPin } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const socialLinks = [
-  { icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/yousef-selawi/', color: 'hover:text-[#0077b5]' },
-  { icon: Github, label: 'GitHub', href: 'https://github.com/selaw1', color: 'hover:text-foreground' },
-  { icon: Mail, label: 'Email', href: 'mailto:yousef@selawii.com', color: 'hover:text-primary' },
+const socials = [
+  { icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/yousef-selawi/' },
+  { icon: Github, label: 'GitHub', href: 'https://github.com/selaw1' },
+  { icon: Mail, label: 'Email', href: 'mailto:yousef@selawii.com' },
 ];
-
 
 export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
-  const headlineRef = useRef<HTMLHeadingElement>(null);
-  const cardsRef = useRef<(HTMLAnchorElement | null)[]>([]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const scrollTriggers: ScrollTrigger[] = [];
-
-      // Headline
-      scrollTriggers.push(
+      const els = sectionRef.current?.querySelectorAll('[data-animate]') ?? [];
+      els.forEach((el, i) => {
         ScrollTrigger.create({
-          trigger: headlineRef.current,
-          start: 'top 80%',
+          trigger: el,
+          start: 'top 88%',
+          once: true,
           onEnter: () => {
-            gsap.fromTo(
-              headlineRef.current,
-              { opacity: 0, y: 30 },
-              { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }
+            gsap.fromTo(el,
+              { opacity: 0, y: 20 },
+              { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out', delay: i * 0.06 }
             );
           },
-          once: true
-        })
-      );
-
-      // Cards stagger
-      cardsRef.current.forEach((card, i) => {
-        if (card) {
-          scrollTriggers.push(
-            ScrollTrigger.create({
-              trigger: card,
-              start: 'top 90%',
-              onEnter: () => {
-                gsap.fromTo(
-                  card,
-                  { opacity: 0, y: 30, scale: 0.9 },
-                  { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'back.out(1.7)', delay: i * 0.1 }
-                );
-              },
-              once: true
-            })
-          );
-        }
+        });
       });
-
-      return () => {
-        scrollTriggers.forEach(st => st.kill());
-      };
     }, sectionRef);
-
     return () => ctx.revert();
   }, []);
 
   return (
-    <section
-      id="contact"
-      ref={sectionRef}
-      className="relative py-24 lg:py-32 overflow-hidden bg-secondary/50 dark:bg-brand-black transition-colors"
-    >
-      {/* Grid pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `
-            linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px),
-            linear-gradient(hsl(var(--primary)) 1px, transparent 1px)
-          `,
-          backgroundSize: '60px 60px'
-        }} />
-      </div>
+    <section id="contact" ref={sectionRef} className="py-28 lg:py-36 bg-background">
+      <div className="max-w-6xl mx-auto px-6 lg:px-10 text-center">
 
-      <div className="max-w-5xl mx-auto px-6 lg:px-12 relative">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h2 
-            ref={headlineRef}
-            className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-foreground mb-4"
-          >
-            Let's <span className="text-primary">Connect</span>
-          </h2>
-          <div className="w-24 h-1 bg-primary mx-auto mb-6" />
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Have a project in mind or want to collaborate? I'd love to hear from you.
-          </p>
+        {/* Label */}
+        <p data-animate className="font-mono text-xs text-muted-foreground mb-4 tracking-widest uppercase">
+          <span className="text-primary">//</span> contact
+        </p>
+
+        {/* Headline */}
+        <h2
+          data-animate
+          className="font-display font-bold text-foreground mb-6"
+          style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', letterSpacing: '-0.025em' }}
+        >
+          Let's work together
+        </h2>
+
+        <p data-animate className="text-muted-foreground max-w-md mx-auto mb-12 leading-relaxed">
+          Got a project, a question, or just want to say hi? My inbox is always open.
+        </p>
+
+        {/* Giant email CTA */}
+        <a
+          data-animate
+          href="mailto:yousef@selawii.com"
+          className="inline-block font-display font-bold text-primary hover:text-primary/80 transition-colors duration-200 focus-ring rounded cursor-pointer mb-14"
+          style={{ fontSize: 'clamp(1.4rem, 4vw, 2.8rem)', letterSpacing: '-0.02em' }}
+          aria-label="Send an email to yousef@selawii.com"
+        >
+          yousef@selawii.com
+        </a>
+
+        {/* Social row */}
+        <div data-animate className="flex items-center justify-center gap-4 mb-12">
+          {socials.map(({ icon: Icon, label, href }) => (
+            <a
+              key={label}
+              href={href}
+              target={href.startsWith('http') ? '_blank' : undefined}
+              rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+              aria-label={label}
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-md card-solid text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors duration-200 focus-ring cursor-pointer"
+            >
+              <Icon className="w-5 h-5" aria-hidden="true" />
+            </a>
+          ))}
         </div>
 
-        {/* Contact Methods Grid */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
-          {socialLinks.map((social, i) => {
-            const Icon = social.icon;
-            return (
-              <a
-                key={i}
-                ref={(el) => { cardsRef.current[i] = el; }}
-                href={social.href}
-                target={social.href.startsWith('http') ? '_blank' : undefined}
-                rel={social.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className={`group relative p-8 bg-card border border-border rounded-2xl hover:border-primary/50 hover:shadow-lg transition-all duration-300 text-center ${social.color}`}
-              >
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:bg-primary/20 transition-all">
-                  <Icon className="w-8 h-8 text-primary" />
-                </div>
-                <h3 className="text-lg font-semibold text-foreground mb-1">{social.label}</h3>
-                <p className="text-sm text-muted-foreground">Connect with me</p>
-                
-                {/* Glow effect */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity -z-10" />
-              </a>
-            );
-          })}
-        </div>
-
-        {/* Direct Email CTA */}
-        <div className="text-center">
-          <a
-            href="mailto:yousef@selawii.com"
-            className="group inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-xl hover:shadow-lg hover:shadow-primary/50 hover:-translate-y-1 transition-all duration-300"
-          >
-            <Send className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-            Send Me an Email
-          </a>
-        </div>
-
-        {/* Location Badge */}
-        <div className="mt-12 flex items-center justify-center gap-2 text-muted-foreground">
-          <MapPin className="w-4 h-4" />
-          <span className="text-sm">Based in Dubai, UAE</span>
+        {/* Location */}
+        <div data-animate className="inline-flex items-center gap-2 text-xs font-mono text-muted-foreground border border-border rounded-full px-4 py-2">
+          <MapPin className="w-3 h-3 text-primary" aria-hidden="true" />
+          Dubai, UAE
         </div>
       </div>
     </section>

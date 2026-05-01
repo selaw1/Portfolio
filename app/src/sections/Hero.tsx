@@ -1,195 +1,154 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Terminal, Code2, Zap, ChevronDown } from 'lucide-react';
-
-gsap.registerPlugin(ScrollTrigger);
+import { ArrowRight, FileText } from 'lucide-react';
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const glitchRef = useRef<HTMLHeadingElement>(null);
-  const subtitleRef = useRef<HTMLParagraphElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const terminalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.3 });
-
-      // Glitch title entrance
-      tl.fromTo(
-        glitchRef.current,
-        { opacity: 0, y: 50, filter: 'blur(10px)' },
-        { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1, ease: 'power3.out' }
-      );
-
-      // Subtitle
-      tl.fromTo(
-        subtitleRef.current,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' },
-        '-=0.5'
-      );
-
-      // CTA buttons
-      tl.fromTo(
-        ctaRef.current?.children || [],
-        { opacity: 0, scale: 0.8 },
-        { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.7)', stagger: 0.1 },
-        '-=0.3'
-      );
-
-      // Grid animation
-      if (gridRef.current) {
-        const lines = gridRef.current.querySelectorAll('.grid-line');
-        gsap.fromTo(
-          lines,
-          { scaleX: 0 },
-          { scaleX: 1, duration: 1.5, ease: 'power2.out', stagger: 0.05, delay: 0.5 }
-        );
-      }
-
-      // Continuous glitch effect
-      const glitchLoop = () => {
-        if (glitchRef.current && Math.random() > 0.9) {
-          gsap.to(glitchRef.current, {
-            x: Math.random() * 4 - 2,
-            duration: 0.05,
-            repeat: 3,
-            yoyo: true,
-            onComplete: () => {
-              gsap.set(glitchRef.current, { x: 0 });
-            }
-          });
+      const els = contentRef.current?.querySelectorAll('[data-enter]') ?? [];
+      gsap.fromTo(
+        Array.from(els),
+        { opacity: 0, y: 22 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.45,
+          ease: 'power3.out',
+          stagger: 0.07,
+          delay: 0.25,
         }
-      };
-      
-      const interval = setInterval(glitchLoop, 3000);
+      );
 
-      return () => {
-        clearInterval(interval);
-      };
-    }, sectionRef);
-
+      gsap.fromTo(
+        terminalRef.current,
+        { opacity: 0, y: 18 },
+        { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out', delay: 0.55 }
+      );
+    });
     return () => ctx.revert();
   }, []);
 
-  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <section
       id="hero"
       ref={sectionRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background dark:bg-brand-black transition-colors"
+      className="relative min-h-screen flex items-center bg-background overflow-hidden"
     >
-      {/* Animated Grid Background */}
-      <div ref={gridRef} className="absolute inset-0 opacity-30 dark:opacity-20">
-        {/* Horizontal lines */}
-        {Array.from({ length: 12 }).map((_, i) => (
-          <div
-            key={`h-${i}`}
-            className="grid-line absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary to-transparent"
-            style={{ top: `${(i + 1) * 8.33}%` }}
-          />
-        ))}
-        {/* Vertical lines */}
-        {Array.from({ length: 20 }).map((_, i) => (
-          <div
-            key={`v-${i}`}
-            className="grid-line absolute top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-primary to-transparent"
-            style={{ left: `${(i + 1) * 5}%` }}
-          />
-        ))}
+      {/* Radial glow — purely decorative, pointer-events none */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 flex items-center justify-center"
+      >
+        <div className="w-[600px] h-[600px] rounded-full bg-primary/5 blur-[100px]" />
       </div>
 
-      {/* Floating orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-      </div>
+      <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-10 py-28 w-full">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-20 relative z-10">
-        <div className="text-center space-y-8">
-          {/* Status Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 dark:bg-primary/20 border border-primary/20">
-            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            <span className="text-sm font-medium text-primary">Fullstack Developer</span>
-          </div>
+          {/* Left — content */}
+          <div ref={contentRef} className="flex flex-col gap-6">
+            {/* Status badge */}
+            <div data-enter className="inline-flex items-center gap-2 self-start">
+              <span className="flex h-2 w-2 rounded-full bg-emerald-400" />
+              <span className="text-xs font-medium font-mono text-muted-foreground uppercase tracking-widest">
+                Available for work
+              </span>
+            </div>
 
-          {/* Main Heading with Glitch Effect */}
-          <h1
-            ref={glitchRef}
-            className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-serif font-bold text-foreground mb-6 relative"
-            data-text="Yousef Selawi"
-          >
-            <span className="text-foreground">Yousef </span>
-            <span className="text-primary">Selawi</span>
-          </h1>
+            {/* Name */}
+            <h1
+              data-enter
+              className="font-display font-bold text-foreground leading-none"
+              style={{ fontSize: 'clamp(2.8rem, 6vw, 4.5rem)', letterSpacing: '-0.03em' }}
+            >
+              Yousef<br />
+              <span className="gradient-text">Selawi</span>
+            </h1>
 
-          {/* Typing Effect Subtitle */}
-          <p
-            ref={subtitleRef}
-            className="text-xl sm:text-2xl lg:text-3xl text-muted-foreground max-w-3xl mx-auto font-mono"
-          >
-            <Terminal className="inline-block w-6 h-6 mr-2 text-primary" />
-            Software Engineer <span className="text-primary">|</span> Full-Stack Developer
-          </p>
+            {/* Role */}
+            <p
+              data-enter
+              className="text-muted-foreground font-mono text-sm"
+            >
+              <span className="text-primary">›</span>&nbsp;Software Engineer — Full-Stack
+            </p>
 
-          {/* Tech Stack Pills */}
-          <div className="flex flex-wrap justify-center gap-3 pt-4">
-            {['Django', 'React', 'TypeScript', 'PostgreSQL', 'Python'].map((tech, i) => (
-              <div
-                key={tech}
-                className="px-4 py-2 rounded-lg bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 cursor-default"
-                style={{ animationDelay: `${i * 0.1}s` }}
+            {/* Bio */}
+            <p data-enter className="text-muted-foreground leading-relaxed max-w-md">
+              I build performant web applications and data systems.{' '}
+              Crafting products used by thousands every day.
+            </p>
+
+            {/* CTAs */}
+            <div data-enter className="flex flex-wrap items-center gap-3 pt-2">
+              <a
+                href="#contact"
+                onClick={(e) => scrollTo(e, '#contact')}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity duration-200 focus-ring cursor-pointer min-h-[44px]"
               >
-                <span className="text-sm font-medium text-foreground">{tech}</span>
-              </div>
-            ))}
+                Get in touch <ArrowRight className="w-4 h-4" />
+              </a>
+              <a
+                href="/Yousef_Resume.pdf"
+                download
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md card-solid text-sm font-medium text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors duration-200 focus-ring cursor-pointer min-h-[44px]"
+              >
+                <FileText className="w-4 h-4" /> Resume
+              </a>
+            </div>
           </div>
 
-          {/* CTA Buttons */}
-          <div ref={ctaRef} className="flex flex-wrap justify-center gap-4 pt-8">
-            <a
-              href="/Yousef_Resume.pdf"
-              download
-              className="group relative inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-lg overflow-hidden hover:shadow-lg hover:shadow-primary/50 transition-all duration-300"
-            >
-              <span className="relative z-10">Download Resume</span>
-              <Code2 className="w-5 h-5 relative z-10 group-hover:rotate-12 transition-transform" />
-              <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity" />
-            </a>
-            
-            <a
-              href="#contact"
-              onClick={(e) => scrollToSection(e, '#contact')}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-card text-foreground font-semibold rounded-lg border-2 border-border hover:border-primary hover:bg-primary/5 transition-all duration-300"
-            >
-              Let's Connect
-              <Zap className="w-5 h-5" />
-            </a>
-          </div>
-
-          {/* Scroll Indicator */}
-          <a
-            href="#about"
-            onClick={(e) => scrollToSection(e, '#about')}
-            className="inline-block pt-12 text-muted-foreground hover:text-primary transition-colors animate-bounce cursor-pointer"
+          {/* Right — fake terminal */}
+          <div
+            ref={terminalRef}
+            className="card-solid rounded-xl overflow-hidden shadow-card lg:block"
+            aria-label="Code snippet example"
+            aria-hidden="true"
           >
-            <ChevronDown className="w-8 h-8" />
-          </a>
+            {/* Terminal title bar */}
+            <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-secondary/30">
+              <span className="w-3 h-3 rounded-full bg-red-500/70" />
+              <span className="w-3 h-3 rounded-full bg-yellow-500/70" />
+              <span className="w-3 h-3 rounded-full bg-emerald-500/70" />
+              <span className="ml-3 text-xs font-mono text-muted-foreground">api/views.py</span>
+            </div>
+
+            {/* Code body */}
+            <pre className="p-6 text-xs font-mono leading-relaxed overflow-x-auto text-foreground/70">
+<span className="text-primary/70">from</span> <span className="text-emerald-400/80">django.db.models</span> <span className="text-primary/70">import</span> Prefetch{'\n'}
+<span className="text-primary/70">from</span> <span className="text-emerald-400/80">rest_framework.views</span> <span className="text-primary/70">import</span> APIView{'\n'}
+{'\n'}
+<span className="text-muted-foreground"># ── Harakti real-time route API ──────────────────</span>{'\n'}
+<span className="text-yellow-400/80">class</span> <span className="text-emerald-400/80">RouteDetailView</span>(APIView):{'\n'}
+{'    '}<span className="text-yellow-400/80">def</span> <span className="text-primary/90">get</span>(<span className="text-yellow-400/80">self</span>, request, pk):{'\n'}
+{'        '}route = Route.objects.prefetch_related({'\n'}
+{'            '}Prefetch(<span className="text-green-400/90">'stops'</span>,{'\n'}
+{'                    '}queryset=Stop.objects.order_by(<span className="text-green-400/90">'sequence'</span>)){'\n'}
+{'        '}).get(pk=pk){'\n'}
+{'        '}<span className="text-muted-foreground"># serialize &amp; return optimised payload</span>{'\n'}
+{'        '}serializer = RouteSerializer(route){'\n'}
+{'        '}<span className="text-primary/70">return</span> Response(serializer.data){'\n'}
+<span className="text-muted-foreground">{'\n'}# currently @ Kalvad · Dubai</span>{'\n'}
+<span className="text-muted-foreground"># 1M+ rows served daily</span>
+            </pre>
+
+            {/* Blinking cursor line */}
+            <div className="px-6 pb-5 font-mono text-xs text-muted-foreground/50 flex items-center gap-1">
+              <span className="text-primary/60">❯</span>
+              <span className="animate-cursor inline-block w-[6px] h-[14px] bg-primary/40 rounded-sm" />
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* Corner Accents */}
-      <div className="absolute top-0 left-0 w-32 h-32 border-l-2 border-t-2 border-primary/30" />
-      <div className="absolute bottom-0 right-0 w-32 h-32 border-r-2 border-b-2 border-primary/30" />
     </section>
   );
 }

@@ -6,7 +6,8 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
-        serif: ['Fraunces', 'Georgia', 'serif'],
+        display: ['Space Grotesk', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -42,25 +43,7 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        brand: {
-          primary: '#0070a0',
-          dark: '#004968',
-          light: '#2c90c9',
-          accent: '#1b9cca',
-          yellow: '#faea73',
-          pink: '#f7cedc',
-          cyan: '#cceff6',
-          gray: '#dee5eb',
-          black: '#1f1f1f',
-          'dark-gray': '#33383f',
-          'medium-gray': '#626a72',
-          'light-gray': '#99a4af',
-          'soft-gray': '#c2cdd8',
-          silver: '#dee5eb',
-          'bg-gray': '#f7f9fa',
-          cream: '#cce5f3',
-          'light-bg': '#e6f7ff',
-        },
+        brand: {},
       },
       borderRadius: {
         xl: "calc(var(--radius) + 4px)",
@@ -71,13 +54,10 @@ module.exports = {
       },
       boxShadow: {
         xs: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
-        'soft': '0 4px 20px rgba(0, 0, 0, 0.08)',
-        'medium': '0 8px 30px rgba(0, 0, 0, 0.12)',
-        'large': '0 20px 50px rgba(0, 0, 0, 0.15)',
-        'glow': '0 0 40px rgba(0, 112, 160, 0.3)',
-        'glow-lg': '0 0 60px rgba(0, 112, 160, 0.4)',
+        'glow': '0 0 40px hsl(var(--primary) / 0.3)',
+        'glow-lg': '0 0 60px hsl(var(--primary) / 0.45)',
         'card': '0 4px 20px rgba(0, 0, 0, 0.08)',
-        'card-hover': '0 25px 50px rgba(0, 0, 0, 0.12)',
+        'card-hover': '0 12px 32px rgba(0, 0, 0, 0.14)',
       },
       keyframes: {
         "accordion-down": {
