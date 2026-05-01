@@ -60,7 +60,7 @@ export default function Hero() {
             <div data-enter className="inline-flex items-center gap-2 self-start">
               <span className="flex h-2 w-2 rounded-full bg-emerald-400" />
               <span className="text-xs font-medium font-mono text-muted-foreground uppercase tracking-widest">
-                Available for work
+                Available
               </span>
             </div>
 
@@ -119,26 +119,36 @@ export default function Hero() {
               <span className="w-3 h-3 rounded-full bg-red-500/70" />
               <span className="w-3 h-3 rounded-full bg-yellow-500/70" />
               <span className="w-3 h-3 rounded-full bg-emerald-500/70" />
-              <span className="ml-3 text-xs font-mono text-muted-foreground">api/views.py</span>
+              <span className="ml-3 text-xs font-mono text-muted-foreground">api/routes.py</span>
             </div>
 
             {/* Code body */}
             <pre className="p-6 text-xs font-mono leading-relaxed overflow-x-auto text-foreground/70">
+<span className="text-primary/70">from</span> <span className="text-emerald-400/80">django.shortcuts</span> <span className="text-primary/70">import</span> get_object_or_404{'\n'}
 <span className="text-primary/70">from</span> <span className="text-emerald-400/80">django.db.models</span> <span className="text-primary/70">import</span> Prefetch{'\n'}
-<span className="text-primary/70">from</span> <span className="text-emerald-400/80">rest_framework.views</span> <span className="text-primary/70">import</span> APIView{'\n'}
+<span className="text-primary/70">from</span> <span className="text-emerald-400/80">ninja</span> <span className="text-primary/70">import</span> Router{'\n'}
 {'\n'}
-<span className="text-muted-foreground"># ── Harakti real-time route API ──────────────────</span>{'\n'}
-<span className="text-yellow-400/80">class</span> <span className="text-emerald-400/80">RouteDetailView</span>(APIView):{'\n'}
-{'    '}<span className="text-yellow-400/80">def</span> <span className="text-primary/90">get</span>(<span className="text-yellow-400/80">self</span>, request, pk):{'\n'}
-{'        '}route = Route.objects.prefetch_related({'\n'}
-{'            '}Prefetch(<span className="text-green-400/90">'stops'</span>,{'\n'}
-{'                    '}queryset=Stop.objects.order_by(<span className="text-green-400/90">'sequence'</span>)){'\n'}
-{'        '}).get(pk=pk){'\n'}
-{'        '}<span className="text-muted-foreground"># serialize &amp; return optimised payload</span>{'\n'}
-{'        '}serializer = RouteSerializer(route){'\n'}
-{'        '}<span className="text-primary/70">return</span> Response(serializer.data){'\n'}
-<span className="text-muted-foreground">{'\n'}# currently @ Kalvad · Dubai</span>{'\n'}
-<span className="text-muted-foreground"># 1M+ rows served daily</span>
+router = Router(tags=[<span className="text-green-400/90">"Fun Stuff"</span>]){'\n'}
+{'\n'}
+<span className="text-muted-foreground"># ────────────────────────────────────────────────</span>{'\n'}
+<span className="text-muted-foreground"># Route Explorer API</span>{'\n'}
+<span className="text-muted-foreground"># Because even data deserves a smooth ride</span>{'\n'}
+<span className="text-muted-foreground"># Serving 1M+ rows daily without breaking a sweat</span>{'\n'}
+<span className="text-muted-foreground"># ────────────────────────────────────────────────</span>{'\n'}
+{'\n'}
+<span className="text-primary/60">@router</span>.get(<span className="text-green-400/90">"/routes/{'{'}{"route_id"}{'}'}"</span>, response=RouteSchema){'\n'}
+<span className="text-yellow-400/80">def</span> <span className="text-primary/90">get_route_detail</span>(request, route_id: <span className="text-emerald-400/80">int</span>):{'\n'}
+{'    '}<span className="text-muted-foreground">"""</span>{'\n'}
+{'    '}<span className="text-muted-foreground">Fetch a route and all its stops (right order).</span>{'\n'}
+{'    '}<span className="text-muted-foreground">No N+1 chaos — clean, optimised queries.</span>{'\n'}
+{'    '}<span className="text-muted-foreground">"""</span>{'\n'}
+{'    '}route = get_object_or_404({'\n'}
+{'        '}Route.objects.prefetch_related({'\n'}
+{'            '}Prefetch(<span className="text-green-400/90">"stops"</span>,{'\n'}
+{'                    '}queryset=Stop.objects.order_by(<span className="text-green-400/90">"sequence"</span>)){'\n'}
+{'        '}), pk=route_id{'\n'}
+{'    '}){'\n'}
+{'    '}<span className="text-primary/70">return</span> route
             </pre>
 
             {/* Blinking cursor line */}

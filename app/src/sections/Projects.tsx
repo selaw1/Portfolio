@@ -7,10 +7,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 const projects = [
   {
-    title: 'Harakti',
+    title: 'Harakti (Web + App)',
     description: 'Track workouts, build routines, and monitor your fitness progress — all in one simple and powerful gym tracker.',
     image: '/harakti.png',
-    tech: ['Django', 'PostgreSQL', 'Django Ninja', 'React', 'TanStack Query', 'Zustand', 'shadcn/ui'],
+    tech: ['Django', 'PostgreSQL', 'Django Ninja', 'React', 'TanStack Query', 'Zustand', 'shadcn/ui', "Celery", "LavinMQ", "JWT", "Capacitor"],
     href: 'https://harakti.com',
     featured: true,
   },
