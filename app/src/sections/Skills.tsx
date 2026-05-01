@@ -17,6 +17,7 @@ const skills = [
   { name: 'Next.js',        category: 'Framework' },
   { name: 'Vite',           category: 'Framework' },
   { name: 'Astro',          category: 'Framework' },
+  { name: 'Capacitor',          category: 'Framework' },
   { name: 'PostgreSQL',     category: 'Database'  },
   { name: 'TimescaleDB',    category: 'Database'  },
   { name: 'MinIO',          category: 'Tools'     },
@@ -29,7 +30,6 @@ const skills = [
   { name: 'Git',            category: 'Tools'     },
   { name: 'Tailwind CSS',   category: 'UI'        },
   { name: 'shadcn/ui',      category: 'UI'        },
-  { name: 'DaisyUI',        category: 'UI'        },
   { name: 'Bootstrap',      category: 'UI'        },
   { name: 'Linux (Arch)',   category: 'OS'        },
 ];
