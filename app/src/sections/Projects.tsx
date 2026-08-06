@@ -1,17 +1,19 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Terminal, ArrowUpRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Terminal, ArrowUpRight, ArrowRight } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const projects = [
   {
-    title: 'Harakti (Web + App)',
-    description: 'Track workouts, build routines, and monitor your fitness progress — all in one simple and powerful gym tracker.',
-    image: '/harakti.png',
-    tech: ['Django', 'PostgreSQL', 'Django Ninja', 'React', 'TanStack Query', 'Zustand', 'shadcn/ui', "Celery", "LavinMQ", "JWT", "Capacitor"],
+    title: 'Harakti',
+    description: 'A bilingual gym tracker on Android and the web. Local-first logging built for gyms with no signal, streaks that survive rest days, and a leaderboard I shipped knowing exactly where it breaks.',
+    image: '/work/harakti/home-dark.webp',
+    tech: ['Django', 'PostgreSQL', 'Django Ninja', 'React', 'TanStack Query', 'Zustand', 'Celery', 'LavinMQ', 'JWT', 'Capacitor'],
     href: 'https://harakti.com',
+    caseStudy: '/work/harakti',
     featured: true,
   },
   {
@@ -73,12 +75,12 @@ export default function Projects() {
           <div key={p.title} data-animate className="group card-solid rounded-2xl overflow-hidden mb-6 hover:border-primary/30 transition-colors duration-200">
             <div className="grid md:grid-cols-2 gap-0">
               {/* Image / placeholder */}
-              <div className="relative bg-secondary/60 h-56 md:h-auto overflow-hidden">
+              <div className="relative bg-secondary/60 h-64 md:h-auto overflow-hidden flex items-center justify-center p-6">
                 {p.image ? (
                   <img
                     src={p.image}
                     alt={p.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="max-h-56 md:max-h-[360px] w-auto rounded-xl group-hover:scale-[1.03] transition-transform duration-500"
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -103,15 +105,25 @@ export default function Projects() {
                     {p.tech.map((t) => <span key={t} className="tag">{t}</span>)}
                   </div>
                 </div>
-                <a
-                  href={p.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline focus-ring rounded cursor-pointer"
-                  aria-label={`Visit ${p.title}`}
-                >
-                  View project <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
-                </a>
+                <div className="mt-6 flex flex-wrap items-center gap-5">
+                  {p.caseStudy && (
+                    <Link
+                      to={p.caseStudy}
+                      className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline focus-ring rounded cursor-pointer"
+                    >
+                      Read the case study <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                    </Link>
+                  )}
+                  <a
+                    href={p.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 focus-ring rounded cursor-pointer"
+                    aria-label={`Visit ${p.title}`}
+                  >
+                    Visit site <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
+                  </a>
+                </div>
               </div>
             </div>
           </div>

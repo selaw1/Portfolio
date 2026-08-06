@@ -8,6 +8,7 @@ import Footer from './sections/Footer';
 import Home from './pages/Home';
 import NotesIndex from './pages/NotesIndex';
 import NPlusOne from './pages/notes/NPlusOne';
+import Harakti from './pages/work/Harakti';
 import NotFound from './pages/NotFound';
 import { metaForPath } from './lib/meta';
 import './App.css';
@@ -65,6 +66,7 @@ function Layout() {
           <Route path="/" element={<Home />} />
           <Route path="/notes" element={<NotesIndex />} />
           <Route path="/notes/n-plus-one" element={<NPlusOne />} />
+          <Route path="/work/harakti" element={<Harakti />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
