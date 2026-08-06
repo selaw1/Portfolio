@@ -19,6 +19,11 @@ const { render, ROUTES, metaForPath, SITE_URL } = await import(
 
 const template = await readFile(join(distDir, 'index.html'), 'utf-8');
 
+// Written by scripts/og.mjs, which runs first. Absent only if that step was skipped.
+const ogManifest = JSON.parse(
+  await readFile(join(distDir, 'og', 'manifest.json'), 'utf-8').catch(() => '{}')
+);
+
 if (!template.includes('<!--app-html-->') || !template.includes('<!--app-head-->')) {
   throw new Error('dist/index.html is missing the <!--app-html--> / <!--app-head--> placeholders');
 }
@@ -26,7 +31,7 @@ if (!template.includes('<!--app-html-->') || !template.includes('<!--app-head-->
 const escape = (s) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-function headFor(meta) {
+function headFor(meta, ogImage) {
   const tags = [
     `<title>${escape(meta.title)}</title>`,
     `<meta name="description" content="${escape(meta.description)}" />`,
@@ -40,6 +45,15 @@ function headFor(meta) {
     `<meta name="twitter:title" content="${escape(meta.title)}" />`,
     `<meta name="twitter:description" content="${escape(meta.description)}" />`,
   ];
+
+  if (ogImage) {
+    const abs = `${SITE_URL}${ogImage}`;
+    tags.push(`<meta property="og:image" content="${escape(abs)}" />`);
+    tags.push(`<meta property="og:image:width" content="1200" />`);
+    tags.push(`<meta property="og:image:height" content="630" />`);
+    tags.push(`<meta property="og:image:alt" content="${escape(meta.title)}" />`);
+    tags.push(`<meta name="twitter:image" content="${escape(abs)}" />`);
+  }
 
   if (meta.publishedTime) {
     tags.push(`<meta property="article:published_time" content="${meta.publishedTime}" />`);
@@ -92,7 +106,7 @@ async function emit(route, html) {
 for (const route of ROUTES) {
   const meta = metaForPath(route);
   const html = template
-    .replace('<!--app-head-->', headFor(meta))
+    .replace('<!--app-head-->', headFor(meta, ogManifest[route]))
     .replace('<!--app-html-->', render(route));
 
   await emit(route, html);
@@ -101,7 +115,7 @@ for (const route of ROUTES) {
 
 // Cloudflare Pages serves this for any path that isn't a built file.
 const notFound = template
-  .replace('<!--app-head-->', headFor({ ...metaForPath('/'), title: 'Not found — Yousef Selawi' }))
+  .replace('<!--app-head-->', headFor({ ...metaForPath('/'), title: 'Not found — Yousef Selawi' }, ogManifest['/']))
   .replace('<!--app-html-->', render('/__404__'));
 await writeFile(join(distDir, '404.html'), notFound, 'utf-8');
 console.log('  prerendered 404             → dist/404.html');

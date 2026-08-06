@@ -10,7 +10,7 @@ const projects = [
   {
     title: 'Harakti',
     description: 'A bilingual gym tracker on Android and the web. Local-first logging built for gyms with no signal, streaks that survive rest days, and a leaderboard I shipped knowing exactly where it breaks.',
-    image: '/work/harakti/home-dark.webp',
+    image: '/work/harakti/story-card.webp',
     tech: ['Django', 'PostgreSQL', 'Django Ninja', 'React', 'TanStack Query', 'Zustand', 'Celery', 'LavinMQ', 'JWT', 'Capacitor'],
     href: 'https://harakti.com',
     caseStudy: '/work/harakti',

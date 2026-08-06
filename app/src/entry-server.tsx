@@ -15,4 +15,4 @@ export function render(url: string): string {
 }
 
 export { ROUTES, metaForPath } from './lib/meta';
-export { NOTES, SITE_URL } from './notes/registry';
+export { NOTES, WORK, SITE_URL, notePath, workPath } from './notes/registry';
