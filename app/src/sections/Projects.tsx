@@ -10,9 +10,10 @@ const projects = [
   {
     title: 'Harakti',
     description: 'A bilingual gym tracker on Android and the web. Local-first logging built for gyms with no signal, streaks that survive rest days, and a leaderboard I shipped knowing exactly where it breaks.',
-    image: '/work/harakti/story-card.webp',
+    image: '/work/harakti/receipt.webp',
     tech: ['Django', 'PostgreSQL', 'Django Ninja', 'React', 'TanStack Query', 'Zustand', 'Celery', 'LavinMQ', 'JWT', 'Capacitor'],
     href: 'https://harakti.com',
+    imageAlt: 'Harakti session receipt in Arabic, with full right-to-left layout',
     caseStudy: '/work/harakti',
     featured: true,
   },
@@ -79,7 +80,7 @@ export default function Projects() {
                 {p.image ? (
                   <img
                     src={p.image}
-                    alt={p.title}
+                    alt={p.imageAlt ?? p.title}
                     className="max-h-56 md:max-h-[360px] w-auto rounded-xl group-hover:scale-[1.03] transition-transform duration-500"
                   />
                 ) : (
@@ -139,7 +140,7 @@ export default function Projects() {
                   {p.image ? (
                     <img
                       src={p.image}
-                      alt={p.title}
+                      alt={p.imageAlt ?? p.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
