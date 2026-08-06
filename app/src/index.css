@@ -1,4 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&family=JetBrains+Mono:wght@400;500&display=swap');
+/* Self-hosted and bundled, so fonts are same-origin and immutably cached —
+   no third-party DNS, TLS and round-trip on the critical render path.
+   These are the variable (wght-axis) builds: one file per family covers
+   400-700, and unicode-range means a browser only fetches the subset it
+   actually needs. Note the families are named "… Variable". */
+@import '@fontsource-variable/space-grotesk/wght.css';
+@import '@fontsource-variable/inter/wght.css';
+@import '@fontsource-variable/jetbrains-mono/wght.css';
 
 @tailwind base;
 @tailwind components;
@@ -66,20 +73,20 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Inter Variable', 'Inter', system-ui, sans-serif;
     font-feature-settings: 'rlig' 1, 'calt' 1;
     line-height: 1.6;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-family: 'Space Grotesk Variable', 'Space Grotesk', system-ui, sans-serif;
     font-feature-settings: 'ss01' 1;
     line-height: 1.15;
     letter-spacing: -0.02em;
   }
 
   code, pre, .font-mono {
-    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-family: 'JetBrains Mono Variable', 'JetBrains Mono', 'Fira Code', monospace;
   }
 }
 
