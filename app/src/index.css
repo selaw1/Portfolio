@@ -180,6 +180,24 @@
   background: hsl(var(--primary));
 }
 
+/* Long-form note body. Direct-child selectors only, so embedded widgets and
+   code blocks keep their own layout without needing an escape hatch. */
+.note-prose > p {
+  @apply text-muted-foreground leading-relaxed mb-5;
+}
+
+.note-prose > h2 {
+  @apply font-display font-bold text-foreground text-2xl mt-14 mb-4;
+}
+
+.note-prose > p strong {
+  @apply text-foreground font-medium;
+}
+
+.note-prose > p a {
+  @apply text-primary underline underline-offset-2;
+}
+
 /* Tag / badge */
 .tag {
   @apply inline-flex items-center px-3 py-1 text-xs font-medium rounded-full;

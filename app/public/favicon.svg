@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="14" fill="#0c0c10"/>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="12.5" fill="none" stroke="#a855f7" stroke-opacity="0.35" stroke-width="3"/>
+  <text x="32" y="43" text-anchor="middle"
+        font-family="'Space Grotesk',system-ui,-apple-system,sans-serif"
+        font-size="30" font-weight="700" fill="#a855f7" letter-spacing="-1">YS</text>
+</svg>
