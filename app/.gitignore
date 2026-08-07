@@ -44,3 +44,7 @@ Thumbs.db
 *.temp
 # SSR build output
 dist-ssr/
+
+# Cloudflare Pages local secrets — never commit
+.dev.vars
+.wrangler/
