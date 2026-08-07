@@ -1,93 +1,80 @@
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Linkedin, Github, Mail, MapPin } from 'lucide-react';
+import { Linkedin, Github, Mail, MapPin, ArrowUpRight } from 'lucide-react';
+import { Reveal } from '../components/Reveal';
+import { StarsBackground } from '../components/animate-ui/backgrounds/stars';
+import SectionLabel from '../components/SectionLabel';
 
-gsap.registerPlugin(ScrollTrigger);
+const EMAIL = 'yousef@selawii.com';
 
 const socials = [
   { icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/yousef-selawi/' },
   { icon: Github, label: 'GitHub', href: 'https://github.com/selaw1' },
-  { icon: Mail, label: 'Email', href: 'mailto:yousef@selawii.com' },
+  { icon: Mail, label: 'Email', href: `mailto:${EMAIL}` },
 ];
 
 export default function Contact() {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const els = sectionRef.current?.querySelectorAll('[data-animate]') ?? [];
-      els.forEach((el, i) => {
-        ScrollTrigger.create({
-          trigger: el,
-          start: 'top 88%',
-          once: true,
-          onEnter: () => {
-            gsap.fromTo(el,
-              { opacity: 0, y: 20 },
-              { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out', delay: i * 0.06 }
-            );
-          },
-        });
-      });
-    }, sectionRef);
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section id="contact" ref={sectionRef} className="py-28 lg:py-36 bg-background">
-      <div className="max-w-6xl mx-auto px-6 lg:px-10 text-center">
+    <section id="contact" className="relative bg-background overflow-hidden">
+      <StarsBackground className="absolute inset-0" speed={90} />
 
-        {/* Label */}
-        <p data-animate className="font-mono text-xs text-muted-foreground mb-4 tracking-widest uppercase">
-          <span className="text-primary">//</span> contact
-        </p>
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute -bottom-56 left-1/2 -translate-x-1/2 w-[760px] h-[760px] max-w-[140vw] rounded-full bg-primary/12 blur-[130px]" />
+        <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-background to-transparent" />
+      </div>
 
-        {/* Headline */}
-        <h2
-          data-animate
-          className="font-display font-bold text-foreground mb-6"
-          style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', letterSpacing: '-0.025em' }}
-        >
-          Let's work together
-        </h2>
+      <div className="relative z-10 max-w-4xl mx-auto px-6 lg:px-10 py-32 lg:py-40 text-center">
+        <SectionLabel>contact</SectionLabel>
 
-        <p data-animate className="text-muted-foreground max-w-md mx-auto mb-12 leading-relaxed">
-          Got a project, a question, or just want to say hi? My inbox is always open.
-        </p>
+        <Reveal>
+          <h2
+            className="font-display font-bold text-foreground mb-6"
+            style={{ fontSize: 'clamp(2.25rem, 6vw, 4rem)', letterSpacing: '-0.035em' }}
+          >
+            Let's build something<br />
+            <span className="gradient-text">worth maintaining</span>
+          </h2>
+        </Reveal>
 
-        {/* Giant email CTA */}
-        <a
-          data-animate
-          href="mailto:yousef@selawii.com"
-          className="inline-block font-display font-bold text-primary hover:text-primary/80 transition-colors duration-200 focus-ring rounded cursor-pointer mb-14"
-          style={{ fontSize: 'clamp(1.4rem, 4vw, 2.8rem)', letterSpacing: '-0.02em' }}
-          aria-label="Send an email to yousef@selawii.com"
-        >
-          yousef@selawii.com
-        </a>
+        <Reveal index={1}>
+          <p className="text-muted-foreground leading-relaxed max-w-md mx-auto mb-12">
+            Got a system that's outgrown its schema, or a product that needs
+            building end to end? My inbox is open.
+          </p>
+        </Reveal>
 
-        {/* Social row */}
-        <div data-animate className="flex items-center justify-center gap-4 mb-12">
-          {socials.map(({ icon: Icon, label, href }) => (
-            <a
-              key={label}
-              href={href}
-              target={href.startsWith('http') ? '_blank' : undefined}
-              rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
-              aria-label={label}
-              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-md card-solid text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors duration-200 focus-ring cursor-pointer"
-            >
-              <Icon className="w-5 h-5" aria-hidden="true" />
-            </a>
-          ))}
-        </div>
+        <Reveal index={2}>
+          <a
+            href={`mailto:${EMAIL}`}
+            className="group inline-flex items-center gap-3 px-7 min-h-[56px] rounded-xl bg-primary text-primary-foreground font-semibold transition-transform duration-200 hover:-translate-y-0.5 focus-ring cursor-pointer mb-10"
+          >
+            <Mail className="w-5 h-5" aria-hidden="true" />
+            {EMAIL}
+            <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+          </a>
+        </Reveal>
 
-        {/* Location */}
-        <div data-animate className="inline-flex items-center gap-2 text-xs font-mono text-muted-foreground border border-border rounded-full px-4 py-2">
-          <MapPin className="w-3 h-3 text-primary" aria-hidden="true" />
-          Dubai, UAE
-        </div>
+        <Reveal index={3}>
+          <div className="flex items-center justify-center gap-3 mb-12">
+            {socials.map(({ icon: Icon, label, href }) => (
+              <a
+                key={label}
+                href={href}
+                target={href.startsWith('http') ? '_blank' : undefined}
+                rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                aria-label={label}
+                className="inline-flex items-center justify-center w-12 h-12 rounded-xl border border-border bg-card/60 backdrop-blur-sm text-muted-foreground hover:text-primary hover:border-primary/40 hover:-translate-y-0.5 transition-all duration-200 focus-ring cursor-pointer"
+              >
+                <Icon className="w-5 h-5" aria-hidden="true" />
+              </a>
+            ))}
+          </div>
+        </Reveal>
+
+        <Reveal index={4}>
+          <p className="inline-flex items-center gap-2 text-xs font-mono text-muted-foreground border border-border rounded-full px-4 py-2 bg-card/50 backdrop-blur-sm">
+            <MapPin className="w-3.5 h-3.5 text-primary" aria-hidden="true" />
+            Dubai, UAE · GMT+4
+          </p>
+        </Reveal>
       </div>
     </section>
   );

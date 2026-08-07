@@ -1,164 +1,105 @@
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ArrowRight, FileText } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { m } from 'motion/react';
+import { ArrowRight, FileText, ArrowDown } from 'lucide-react';
+import { StarsBackground } from '../components/animate-ui/backgrounds/stars';
+import { SplittingText } from '../components/animate-ui/text/splitting';
+
+const ROLES = ['Django', 'PostgreSQL', 'TimescaleDB', 'React', 'TypeScript'];
 
 export default function Hero() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const terminalRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const els = contentRef.current?.querySelectorAll('[data-enter]') ?? [];
-      gsap.fromTo(
-        Array.from(els),
-        { opacity: 0, y: 22 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.45,
-          ease: 'power3.out',
-          stagger: 0.07,
-          delay: 0.25,
-        }
-      );
-
-      gsap.fromTo(
-        terminalRef.current,
-        { opacity: 0, y: 18 },
-        { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out', delay: 0.55 }
-      );
-    });
-    return () => ctx.revert();
-  }, []);
-
-  const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
-  };
+  // Unconditional: MotionConfig reducedMotion="user" strips the transform and
+  // settles opacity, so this stays correct without branching on a hook that is
+  // null during SSR.
+  const rise = (delay: number) => ({
+    initial: { opacity: 0, y: 16 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const, delay },
+  });
 
   return (
     <section
       id="hero"
-      ref={sectionRef}
-      className="relative min-h-screen flex items-center bg-background overflow-hidden"
+      className="relative min-h-[100svh] flex items-center bg-background overflow-hidden"
     >
-      {/* Radial glow — purely decorative, pointer-events none */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 flex items-center justify-center"
-      >
-        <div className="w-[600px] h-[600px] rounded-full bg-primary/5 blur-[100px]" />
+      <StarsBackground className="absolute inset-0" />
+
+      {/* Aurora wash — decorative, sits under the content */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[820px] h-[820px] max-w-[140vw] rounded-full bg-primary/12 blur-[130px]" />
+        <div className="absolute bottom-0 inset-x-0 h-56 bg-gradient-to-t from-background to-transparent" />
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-10 py-28 w-full">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-6 lg:px-10 py-32">
+        <m.p
+          {...rise(0.05)}
+          className="inline-flex items-center gap-2.5 mb-8 text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground"
+        >
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400/70 motion-safe:animate-ping" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+          </span>
+          Available for work
+        </m.p>
 
-          {/* Left — content */}
-          <div ref={contentRef} className="flex flex-col gap-6">
-            {/* Status badge */}
-            <div data-enter className="inline-flex items-center gap-2 self-start">
-              <span className="flex h-2 w-2 rounded-full bg-emerald-400" />
-              <span className="text-xs font-medium font-mono text-muted-foreground uppercase tracking-widest">
-                Available
-              </span>
-            </div>
+        <h1
+          className="font-display font-bold text-foreground leading-[0.95] mb-7"
+          style={{ fontSize: 'clamp(3rem, 9vw, 6.5rem)', letterSpacing: '-0.04em' }}
+        >
+          <SplittingText text="Yousef" className="block" delay={0.1} />
+          <SplittingText text="Selawi" className="block gradient-text" delay={0.22} />
+        </h1>
 
-            {/* Name */}
-            <h1
-              data-enter
-              className="font-display font-bold text-foreground leading-none"
-              style={{ fontSize: 'clamp(2.8rem, 6vw, 4.5rem)', letterSpacing: '-0.03em' }}
+        <m.p
+          {...rise(0.4)}
+          className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-xl mb-8"
+        >
+          Software engineer in Dubai. I build backends that stay fast when the
+          data gets big — and the interfaces on top of them.
+        </m.p>
+
+        <m.ul {...rise(0.48)} className="flex flex-wrap gap-2 mb-10" aria-label="Core stack">
+          {ROLES.map((r) => (
+            <li
+              key={r}
+              className="px-3 py-1 rounded-full border border-border/80 bg-card/40 backdrop-blur-sm text-xs font-mono text-muted-foreground"
             >
-              Yousef<br />
-              <span className="gradient-text">Selawi</span>
-            </h1>
+              {r}
+            </li>
+          ))}
+        </m.ul>
 
-            {/* Role */}
-            <p
-              data-enter
-              className="text-muted-foreground font-mono text-sm"
-            >
-              <span className="text-primary">›</span>&nbsp;Software Engineer — Full-Stack
-            </p>
-
-            {/* Bio */}
-            <p data-enter className="text-muted-foreground leading-relaxed max-w-md">
-              I build performant web applications and data systems.{' '}
-              Crafting products used by thousands every day.
-            </p>
-
-            {/* CTAs */}
-            <div data-enter className="flex flex-wrap items-center gap-3 pt-2">
-              <a
-                href="#contact"
-                onClick={(e) => scrollTo(e, '#contact')}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity duration-200 focus-ring cursor-pointer min-h-[44px]"
-              >
-                Get in touch <ArrowRight className="w-4 h-4" />
-              </a>
-              <a
-                href="/Yousef_Resume.pdf"
-                download
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md card-solid text-sm font-medium text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors duration-200 focus-ring cursor-pointer min-h-[44px]"
-              >
-                <FileText className="w-4 h-4" /> Resume
-              </a>
-            </div>
-          </div>
-
-          {/* Right — fake terminal */}
-          <div
-            ref={terminalRef}
-            className="card-solid rounded-xl overflow-hidden shadow-card lg:block"
-            aria-label="Code snippet example"
-            aria-hidden="true"
+        <m.div {...rise(0.56)} className="flex flex-wrap items-center gap-3">
+          <Link
+            to="/work/harakti"
+            className="group inline-flex items-center gap-2 px-6 min-h-[48px] rounded-lg bg-primary text-primary-foreground text-sm font-semibold transition-transform duration-200 hover:-translate-y-0.5 focus-ring cursor-pointer"
           >
-            {/* Terminal title bar */}
-            <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-secondary/30">
-              <span className="w-3 h-3 rounded-full bg-red-500/70" />
-              <span className="w-3 h-3 rounded-full bg-yellow-500/70" />
-              <span className="w-3 h-3 rounded-full bg-emerald-500/70" />
-              <span className="ml-3 text-xs font-mono text-muted-foreground">api/routes.py</span>
-            </div>
-
-            {/* Code body */}
-            <pre className="p-6 text-xs font-mono leading-relaxed overflow-x-auto text-foreground/70">
-<span className="text-primary/70">from</span> <span className="text-emerald-400/80">django.shortcuts</span> <span className="text-primary/70">import</span> get_object_or_404{'\n'}
-<span className="text-primary/70">from</span> <span className="text-emerald-400/80">django.db.models</span> <span className="text-primary/70">import</span> Prefetch{'\n'}
-<span className="text-primary/70">from</span> <span className="text-emerald-400/80">ninja</span> <span className="text-primary/70">import</span> Router{'\n'}
-{'\n'}
-router = Router(tags=[<span className="text-green-400/90">"Fun Stuff"</span>]){'\n'}
-{'\n'}
-<span className="text-muted-foreground"># ────────────────────────────────────────────────</span>{'\n'}
-<span className="text-muted-foreground"># Route Explorer API</span>{'\n'}
-<span className="text-muted-foreground"># Because even data deserves a smooth ride</span>{'\n'}
-<span className="text-muted-foreground"># Serving 1M+ rows daily without breaking a sweat</span>{'\n'}
-<span className="text-muted-foreground"># ────────────────────────────────────────────────</span>{'\n'}
-{'\n'}
-<span className="text-primary/60">@router</span>.get(<span className="text-green-400/90">"/routes/{'{'}{"route_id"}{'}'}"</span>, response=RouteSchema){'\n'}
-<span className="text-yellow-400/80">def</span> <span className="text-primary/90">get_route_detail</span>(request, route_id: <span className="text-emerald-400/80">int</span>):{'\n'}
-{'    '}<span className="text-muted-foreground">"""</span>{'\n'}
-{'    '}<span className="text-muted-foreground">Fetch a route and all its stops (right order).</span>{'\n'}
-{'    '}<span className="text-muted-foreground">No N+1 chaos — clean, optimised queries.</span>{'\n'}
-{'    '}<span className="text-muted-foreground">"""</span>{'\n'}
-{'    '}route = get_object_or_404({'\n'}
-{'        '}Route.objects.prefetch_related({'\n'}
-{'            '}Prefetch(<span className="text-green-400/90">"stops"</span>,{'\n'}
-{'                    '}queryset=Stop.objects.order_by(<span className="text-green-400/90">"sequence"</span>)){'\n'}
-{'        '}), pk=route_id{'\n'}
-{'    '}){'\n'}
-{'    '}<span className="text-primary/70">return</span> route
-            </pre>
-
-            {/* Blinking cursor line */}
-            <div className="px-6 pb-5 font-mono text-xs text-muted-foreground/50 flex items-center gap-1">
-              <span className="text-primary/60">❯</span>
-              <span className="animate-cursor inline-block w-[6px] h-[14px] bg-primary/40 rounded-sm" />
-            </div>
-          </div>
-        </div>
+            Read the Harakti case study
+            <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true" />
+          </Link>
+          <Link
+            to="/notes"
+            className="inline-flex items-center gap-2 px-6 min-h-[48px] rounded-lg border border-border bg-card/50 backdrop-blur-sm text-sm font-medium text-foreground hover:border-primary/40 transition-colors duration-200 focus-ring cursor-pointer"
+          >
+            Engineering notes
+          </Link>
+          <a
+            href="/Yousef_Resume.pdf"
+            download
+            className="inline-flex items-center gap-2 px-4 min-h-[48px] rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 focus-ring cursor-pointer"
+          >
+            <FileText className="w-4 h-4" aria-hidden="true" /> Résumé
+          </a>
+        </m.div>
       </div>
+
+      <m.a
+        {...rise(0.8)}
+        href="#work"
+        aria-label="Scroll to selected work"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden sm:flex items-center justify-center w-11 h-11 rounded-full border border-border bg-card/50 backdrop-blur-sm text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors duration-200 focus-ring"
+      >
+        <ArrowDown className="w-4 h-4 motion-safe:animate-bounce" aria-hidden="true" />
+      </m.a>
     </section>
   );
 }

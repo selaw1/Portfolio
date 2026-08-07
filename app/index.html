@@ -3,10 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Yousef Selawi - Portfolio</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!--app-head-->
+    <script>
+      // Applied before first paint so dark-mode visitors never see a light flash.
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (!t) {
+            t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          if (t === 'dark') document.documentElement.classList.add('dark');
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><!--app-html--></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

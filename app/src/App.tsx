@@ -1,55 +1,78 @@
 import { useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import { LazyMotion, MotionConfig, domAnimation } from 'motion/react';
 import { ThemeProvider } from './contexts/ThemeContext';
 import Navigation from './sections/Navigation';
-import Hero from './sections/Hero';
-import About from './sections/About';
-import Skills from './sections/Skills';
-import Experience from './sections/Experience';
-import Projects from './sections/Projects';
-import Contact from './sections/Contact';
 import Footer from './sections/Footer';
-import './App.css';
+import Home from './pages/Home';
+import NotesIndex from './pages/NotesIndex';
+import NPlusOne from './pages/notes/NPlusOne';
+import Harakti from './pages/work/Harakti';
+import NotFound from './pages/NotFound';
+import { metaForPath } from './lib/meta';
 
-gsap.registerPlugin(ScrollTrigger);
+/**
+ * The prerenderer writes the correct <head> into every emitted page, so this
+ * only has to cover client-side navigation between routes.
+ */
+function useRouteMeta() {
+  const { pathname, hash } = useLocation();
 
-function App() {
   useEffect(() => {
-    // Initialize smooth scroll behavior
-    ScrollTrigger.defaults({
-      toggleActions: 'play none none none',
-    });
+    const meta = metaForPath(pathname);
+    document.title = meta.title;
 
-    // Refresh ScrollTrigger on window resize
-    const handleResize = () => {
-      ScrollTrigger.refresh();
-    };
+    document
+      .querySelector('meta[name="description"]')
+      ?.setAttribute('content', meta.description);
+    document
+      .querySelector('link[rel="canonical"]')
+      ?.setAttribute('href', meta.url);
 
-    window.addEventListener('resize', handleResize);
+    // Anchors on the homepage own their own scroll position.
+    if (!hash) window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+  }, [pathname, hash]);
+}
 
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      ScrollTrigger.getAll().forEach(st => st.kill());
-    };
-  }, []);
+function Layout() {
+  useRouteMeta();
 
   return (
-    <ThemeProvider>
-      <div className="min-h-screen bg-background transition-colors duration-300">
-        <Navigation />
-        <main>
-          <Hero />
-          <About />
-          <Skills />
-          <Experience />
-          <Projects />
-          <Contact />
-        </main>
-        <Footer />
-      </div>
-    </ThemeProvider>
+    <div className="min-h-screen bg-background transition-colors duration-300">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-4 focus:left-4 focus:px-4 focus:py-2 focus:rounded-md focus:bg-primary focus:text-primary-foreground focus:text-sm focus:font-medium"
+      >
+        Skip to content
+      </a>
+      <Navigation />
+      <main id="main">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/notes" element={<NotesIndex />} />
+          <Route path="/notes/n-plus-one" element={<NPlusOne />} />
+          <Route path="/work/harakti" element={<Harakti />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
+      <Footer />
+    </div>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <ThemeProvider>
+      {/* domAnimation covers animations, gestures and whileInView. It leaves
+          out the layout-projection engine, which nothing here uses. */}
+      <LazyMotion features={domAnimation} strict>
+        {/* Motion drops transform animations for users who ask for reduced
+            motion, while still settling elements on their final opacity —
+            so nothing is left invisible. */}
+        <MotionConfig reducedMotion="user">
+          <Layout />
+        </MotionConfig>
+      </LazyMotion>
+    </ThemeProvider>
+  );
+}

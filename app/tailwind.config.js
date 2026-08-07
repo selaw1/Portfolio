@@ -5,9 +5,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Space Grotesk', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+        sans: ['Inter Variable', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['Space Grotesk Variable', 'Space Grotesk', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono Variable', 'JetBrains Mono', 'Fira Code', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -43,77 +43,14 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        brand: {},
       },
       borderRadius: {
         xl: "calc(var(--radius) + 4px)",
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
-        xs: "calc(var(--radius) - 6px)",
-      },
-      boxShadow: {
-        xs: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
-        'glow': '0 0 40px hsl(var(--primary) / 0.3)',
-        'glow-lg': '0 0 60px hsl(var(--primary) / 0.45)',
-        'card': '0 4px 20px rgba(0, 0, 0, 0.08)',
-        'card-hover': '0 12px 32px rgba(0, 0, 0, 0.14)',
-      },
-      keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
-        "caret-blink": {
-          "0%,70%,100%": { opacity: "1" },
-          "20%,50%": { opacity: "0" },
-        },
-        "float": {
-          "0%, 100%": { transform: "translateY(0px)" },
-          "50%": { transform: "translateY(-15px)" },
-        },
-        "float-slow": {
-          "0%, 100%": { transform: "translateY(0px) rotate(0deg)" },
-          "50%": { transform: "translateY(-20px) rotate(5deg)" },
-        },
-        "pulse-ring": {
-          "0%": { transform: "scale(0.8)", opacity: "1" },
-          "100%": { transform: "scale(1.4)", opacity: "0" },
-        },
-        "slide-up": {
-          "0%": { transform: "translateY(20px)", opacity: "0" },
-          "100%": { transform: "translateY(0)", opacity: "1" },
-        },
-        "slide-down": {
-          "0%": { transform: "translateY(-20px)", opacity: "0" },
-          "100%": { transform: "translateY(0)", opacity: "1" },
-        },
-        "fade-in": {
-          "0%": { opacity: "0" },
-          "100%": { opacity: "1" },
-        },
-        "scale-in": {
-          "0%": { transform: "scale(0.9)", opacity: "0" },
-          "100%": { transform: "scale(1)", opacity: "1" },
-        },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-        "caret-blink": "caret-blink 1.25s ease-out infinite",
-        "float": "float 6s ease-in-out infinite",
-        "float-slow": "float-slow 8s ease-in-out infinite",
-        "pulse-ring": "pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite",
-        "slide-up": "slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
-        "slide-down": "slide-down 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
-        "fade-in": "fade-in 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
-        "scale-in": "scale-in 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [],
 }

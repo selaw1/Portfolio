@@ -1,123 +1,157 @@
-import { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Code2, Boxes, Database, Wrench, Palette, Terminal } from 'lucide-react';
+import { Reveal } from '../components/Reveal';
+import SectionLabel from '../components/SectionLabel';
 
-gsap.registerPlugin(ScrollTrigger);
+/**
+ * The full stack, grouped so a recruiter can scan for a keyword in one pass.
+ * `core` marks what I work in day to day — the rest is real experience, just
+ * less current, and marking it is more honest than a flat list that implies
+ * everything is equally deep.
+ */
+type Skill = { name: string; core?: boolean };
 
-const skills = [
-  { name: 'Python',         category: 'Language'  },
-  { name: 'JavaScript',     category: 'Language'  },
-  { name: 'TypeScript',     category: 'Language'  },
-  { name: 'HTML',           category: 'Language'  },
-  { name: 'CSS',            category: 'Language'  },
-  { name: 'SCSS',           category: 'Language'  },
-  { name: 'Django',         category: 'Framework' },
-  { name: 'Django Ninja',   category: 'Framework' },
-  { name: 'React',          category: 'Framework' },
-  { name: 'Next.js',        category: 'Framework' },
-  { name: 'Vite',           category: 'Framework' },
-  { name: 'Astro',          category: 'Framework' },
-  { name: 'Capacitor',          category: 'Framework' },
-  { name: 'PostgreSQL',     category: 'Database'  },
-  { name: 'TimescaleDB',    category: 'Database'  },
-  { name: 'MinIO',          category: 'Tools'     },
-  { name: 'Celery',         category: 'Tools'     },
-  { name: 'RabbitMQ',       category: 'Tools'     },
-  { name: 'LavinMQ',        category: 'Tools'     },
-  { name: 'Zustand',        category: 'Tools'     },
-  { name: 'TanStack Query', category: 'Tools'     },
-  { name: 'Sentry',         category: 'Tools'     },
-  { name: 'Git',            category: 'Tools'     },
-  { name: 'Tailwind CSS',   category: 'UI'        },
-  { name: 'shadcn/ui',      category: 'UI'        },
-  { name: 'Bootstrap',      category: 'UI'        },
-  { name: 'Linux (Arch)',   category: 'OS'        },
+const groups: { icon: typeof Code2; name: string; span: string; items: Skill[] }[] = [
+  {
+    icon: Code2,
+    name: 'Languages',
+    span: 'lg:col-span-3',
+    items: [
+      { name: 'Python', core: true },
+      { name: 'TypeScript', core: true },
+      { name: 'JavaScript', core: true },
+      { name: 'SQL', core: true },
+      { name: 'HTML' },
+      { name: 'CSS' },
+      { name: 'SCSS' },
+    ],
+  },
+  {
+    icon: Boxes,
+    name: 'Frameworks',
+    span: 'lg:col-span-3',
+    items: [
+      { name: 'Django', core: true },
+      { name: 'Django Ninja', core: true },
+      { name: 'React', core: true },
+      { name: 'Next.js' },
+      { name: 'Astro' },
+      { name: 'Vite' },
+      { name: 'Capacitor' },
+    ],
+  },
+  {
+    icon: Database,
+    name: 'Databases',
+    span: 'lg:col-span-2',
+    items: [
+      { name: 'PostgreSQL', core: true },
+      { name: 'TimescaleDB', core: true },
+    ],
+  },
+  {
+    icon: Wrench,
+    name: 'Tools & Infra',
+    span: 'lg:col-span-4',
+    items: [
+      { name: 'Celery', core: true },
+      { name: 'RabbitMQ' },
+      { name: 'LavinMQ' },
+      { name: 'MinIO' },
+      { name: 'Docker' },
+      { name: 'TanStack Query', core: true },
+      { name: 'Zustand', core: true },
+      { name: 'Sentry' },
+      { name: 'Git', core: true },
+    ],
+  },
+  {
+    icon: Palette,
+    name: 'UI',
+    span: 'lg:col-span-4',
+    items: [
+      { name: 'Tailwind CSS', core: true },
+      { name: 'shadcn/ui', core: true },
+      { name: 'Bootstrap', core: true },
+    ],
+  },
+  {
+    icon: Terminal,
+    name: 'Environment',
+    span: 'lg:col-span-2',
+    items: [{ name: 'Linux (Arch)', core: true }],
+  },
 ];
 
-const ALL = 'All';
-const categories = [ALL, ...Array.from(new Set(skills.map((s) => s.category)))];
+const total = groups.reduce((n, g) => n + g.items.length, 0);
 
 export default function Skills() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const tagsRef = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(ALL);
-
-  const visible = active === ALL ? skills : skills.filter((s) => s.category === active);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: 'top 80%',
-        once: true,
-        onEnter: () => {
-          const els = sectionRef.current?.querySelectorAll('[data-animate]') ?? [];
-          gsap.fromTo(Array.from(els),
-            { opacity: 0, y: 16 },
-            { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out', stagger: 0.05 }
-          );
-        },
-      });
-    }, sectionRef);
-    return () => ctx.revert();
-  }, []);
-
-  // Re-animate tags on category change
-  useEffect(() => {
-    if (!tagsRef.current) return;
-    const tags = tagsRef.current.querySelectorAll('[data-tag]');
-    gsap.fromTo(Array.from(tags),
-      { opacity: 0, scale: 0.9 },
-      { opacity: 1, scale: 1, duration: 0.25, ease: 'power2.out', stagger: 0.02 }
-    );
-  }, [active]);
-
   return (
-    <section
-      id="skills"
-      ref={sectionRef}
-      className="py-28 lg:py-36 bg-secondary/30"
-    >
+    <section id="stack" className="relative py-28 lg:py-36 bg-background">
       <div className="max-w-6xl mx-auto px-6 lg:px-10">
+        <SectionLabel>stack</SectionLabel>
 
-        {/* Label */}
-        <p data-animate className="font-mono text-xs text-muted-foreground mb-4 tracking-widest uppercase">
-          <span className="text-primary">//</span> skills
-        </p>
-
-        {/* Headline */}
-        <h2
-          data-animate
-          className="font-display font-bold text-foreground mb-10"
-          style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', letterSpacing: '-0.025em' }}
-        >
-          Technologies I work with
-        </h2>
-
-        {/* Category filter */}
-        <div data-animate className="flex flex-wrap gap-2 mb-10" role="group" aria-label="Filter skills by category">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActive(cat)}
-              className={`px-4 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 cursor-pointer focus-ring ${
-                active === cat
-                  ? 'bg-primary/15 text-primary border-primary/40'
-                  : 'bg-transparent text-muted-foreground border-border hover:border-primary/30 hover:text-foreground'
-              }`}
-              aria-pressed={active === cat}
+        <div className="flex flex-wrap items-end justify-between gap-6 mb-12">
+          <Reveal className="max-w-xl">
+            <h2
+              className="font-display font-bold text-foreground mb-4"
+              style={{ fontSize: 'clamp(2rem, 4.5vw, 3.25rem)', letterSpacing: '-0.03em' }}
             >
-              {cat}
-            </button>
-          ))}
+              What I work with
+            </h2>
+            <p className="text-muted-foreground leading-relaxed">
+              Everything I've shipped with, grouped so you can find what you're
+              looking for. {total} in total.
+            </p>
+          </Reveal>
+
+          <Reveal index={1}>
+            <p className="inline-flex items-center gap-2.5 text-xs font-mono text-muted-foreground border border-border rounded-full px-4 py-2">
+              <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full bg-primary" />
+              Used day to day
+            </p>
+          </Reveal>
         </div>
 
-        {/* Tag cloud */}
-        <div ref={tagsRef} className="flex flex-wrap gap-2">
-          {visible.map((skill) => (
-            <span key={skill.name} data-tag className="tag cursor-default">
-              {skill.name}
-            </span>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
+          {groups.map(({ icon: Icon, name, span, items }, i) => (
+            <Reveal
+              key={name}
+              index={i}
+              className={`${span} rounded-2xl border border-border bg-card p-6 hover:border-primary/35 transition-colors duration-200`}
+            >
+              <div className="flex items-center gap-2.5 mb-5">
+                <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 text-primary shrink-0">
+                  <Icon className="w-4 h-4" aria-hidden="true" />
+                </span>
+                <h3 className="font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground">
+                  {name}
+                </h3>
+                <span className="ml-auto font-mono text-xs text-muted-foreground/50 tabular-nums">
+                  {items.length}
+                </span>
+              </div>
+
+              <ul className="flex flex-wrap gap-2">
+                {items.map(({ name: item, core }) => (
+                  <li
+                    key={item}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm border transition-colors duration-200 ${
+                      core
+                        ? 'bg-primary/10 border-primary/25 text-foreground font-medium'
+                        : 'bg-secondary/60 border-border text-muted-foreground'
+                    }`}
+                  >
+                    {/* A dot as well as colour — the legend must not depend on
+                        hue alone to be readable. */}
+                    {core && (
+                      <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full bg-primary" />
+                    )}
+                    {item}
+                    {core && <span className="sr-only"> — used day to day</span>}
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
           ))}
         </div>
       </div>

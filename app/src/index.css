@@ -1,4 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&family=JetBrains+Mono:wght@400;500&display=swap');
+/* Self-hosted and bundled, so fonts are same-origin and immutably cached —
+   no third-party DNS, TLS and round-trip on the critical render path.
+   These are the variable (wght-axis) builds: one file per family covers
+   400-700, and unicode-range means a browser only fetches the subset it
+   actually needs. Note the families are named "… Variable". */
+@import '@fontsource-variable/space-grotesk/wght.css';
+@import '@fontsource-variable/inter/wght.css';
+@import '@fontsource-variable/jetbrains-mono/wght.css';
 
 @tailwind base;
 @tailwind components;
@@ -66,34 +73,27 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Inter Variable', 'Inter', system-ui, sans-serif;
     font-feature-settings: 'rlig' 1, 'calt' 1;
     line-height: 1.6;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-family: 'Space Grotesk Variable', 'Space Grotesk', system-ui, sans-serif;
     font-feature-settings: 'ss01' 1;
     line-height: 1.15;
     letter-spacing: -0.02em;
   }
 
   code, pre, .font-mono {
-    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-family: 'JetBrains Mono Variable', 'JetBrains Mono', 'Fira Code', monospace;
   }
 }
 
 @layer utilities {
-  .text-balance { text-wrap: balance; }
-
   /* Focus ring — accessibility required (WCAG 2.1 §2.4.7) */
   .focus-ring {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
-  }
-
-  /* Surface hierarchy */
-  .surface {
-    @apply bg-card border border-border;
   }
 
   /* Typography helpers */
@@ -101,46 +101,6 @@
     @apply bg-clip-text text-transparent;
     background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(271 100% 80%));
   }
-}
-
-/* ─── Keyframes ─────────────────────────────────────────── */
-
-@keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position:  200% 0; }
-}
-
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0);    }
-}
-
-@keyframes cursor-blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
-}
-
-@keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 24px -6px hsl(var(--primary) / 0.4); }
-  50%       { box-shadow: 0 0 48px -6px hsl(var(--primary) / 0.7); }
-}
-
-/* ─── Animation classes ─────────────────────────────────── */
-
-/* Use transform+opacity only — avoids layout reflow (guide §7) */
-.animate-fade-up   { animation: fade-up 0.35s cubic-bezier(0.16,1,0.3,1) both; }
-.animate-cursor    { animation: cursor-blink 1s steps(1) infinite; }
-.animate-glow      { animation: glow-pulse 3s ease-in-out infinite; }
-
-.animate-shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255,255,255,0.12) 50%,
-    transparent 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 2.4s ease-in-out infinite;
 }
 
 /* ─── Component patterns ────────────────────────────────── */
@@ -152,32 +112,28 @@
   -webkit-backdrop-filter: blur(20px) saturate(160%);
 }
 
-/* Frosted card */
-.card-glass {
-  background: hsl(var(--card) / 0.7);
-  backdrop-filter: blur(12px) saturate(140%);
-  -webkit-backdrop-filter: blur(12px) saturate(140%);
-  border: 1px solid hsl(var(--border));
-}
-
 /* Clean card */
 .card-solid {
   background: hsl(var(--card));
   border: 1px solid hsl(var(--border));
 }
 
-/* Accent border (left rule) */
-.border-accent-l {
-  border-left: 2px solid hsl(var(--primary));
+/* Long-form note body. Direct-child selectors only, so embedded widgets and
+   code blocks keep their own layout without needing an escape hatch. */
+.note-prose > p {
+  @apply text-muted-foreground leading-relaxed mb-5;
 }
 
-/* Section heading underline */
-.section-line {
-  display: inline-block;
-  height: 3px;
-  width: 40px;
-  border-radius: 9999px;
-  background: hsl(var(--primary));
+.note-prose > h2 {
+  @apply font-display font-bold text-foreground text-2xl mt-14 mb-4;
+}
+
+.note-prose > p strong {
+  @apply text-foreground font-medium;
+}
+
+.note-prose > p a {
+  @apply text-primary underline underline-offset-2;
 }
 
 /* Tag / badge */
@@ -193,12 +149,6 @@
   background: hsl(var(--primary) / 0.1);
   color: hsl(var(--primary));
   border-color: hsl(var(--primary) / 0.4);
-}
-
-.tag-accent {
-  background: hsl(var(--primary) / 0.12);
-  color: hsl(var(--primary));
-  border-color: hsl(var(--primary) / 0.3);
 }
 
 /* ─── Scrollbar ─────────────────────────────────────────── */
