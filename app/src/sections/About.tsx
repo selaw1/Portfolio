@@ -4,12 +4,12 @@ import { CountingNumber } from '../components/animate-ui/text/counting-number';
 import SectionLabel from '../components/SectionLabel';
 
 /**
- * Every figure here is checkable: years since Oct 2021, the two products
- * linked further down the page, and the two languages Harakti ships in.
+ * Every figure here is checkable: years since Oct 2021, the product linked
+ * further down the page, and the two languages Harakti ships in.
  */
 const stats = [
   { value: 4, suffix: '+', label: 'Years shipping production systems' },
-  { value: 2, suffix: '', label: 'Products shipped and live' },
+  { value: 1, suffix: '', label: 'Product shipped, live on Google Play' },
   { value: 2, suffix: '', label: 'Languages, full RTL' },
 ];
 

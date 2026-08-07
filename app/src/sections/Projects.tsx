@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUpRight, Github } from 'lucide-react';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { Reveal } from '../components/Reveal';
 import SectionLabel from '../components/SectionLabel';
 
@@ -15,15 +15,6 @@ const featured = {
   href: 'https://harakti.com',
 };
 
-const others = [
-  {
-    title: 'Minbur',
-    description:
-      'A Skool.com-style community platform enabling creators to monetize content and manage memberships. Features JWT auth, Stripe, and cloud-based file storage.',
-    tech: ['Next.js', 'Django Ninja', 'PostgreSQL', 'JWT', 'Stripe', 'MinIO'],
-    href: 'https://github.com/MinburTech/MinburBackend',
-  },
-];
 
 export default function Projects() {
   return (
@@ -100,32 +91,6 @@ export default function Projects() {
           </article>
         </Reveal>
 
-        {/* Others */}
-        <div className="grid md:grid-cols-2 gap-5 mt-5">
-          {others.map((p, i) => (
-            <Reveal key={p.title} index={i}>
-              <a
-                href={p.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex flex-col h-full rounded-2xl border border-border bg-card p-7 hover:border-primary/35 transition-colors duration-200 focus-ring"
-              >
-                <div className="flex items-start justify-between gap-4 mb-3">
-                  <h3 className="font-display font-bold text-foreground text-xl group-hover:text-primary transition-colors duration-200">
-                    {p.title}
-                  </h3>
-                  <Github className="w-4 h-4 shrink-0 mt-1 text-muted-foreground group-hover:text-primary transition-colors duration-200" aria-hidden="true" />
-                </div>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-5 flex-1">
-                  {p.description}
-                </p>
-                <ul className="flex flex-wrap gap-2">
-                  {p.tech.map((t) => <li key={t} className="tag">{t}</li>)}
-                </ul>
-              </a>
-            </Reveal>
-          ))}
-        </div>
       </div>
     </section>
   );

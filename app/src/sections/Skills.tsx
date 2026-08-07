@@ -54,10 +54,10 @@ const groups: { icon: typeof Code2; name: string; span: string; items: Skill[] }
     span: 'lg:col-span-4',
     items: [
       { name: 'Celery', core: true },
-      { name: 'RabbitMQ', core: true },
+      { name: 'RabbitMQ' },
       { name: 'LavinMQ' },
-      { name: 'MinIO', core: true },
-      { name: 'Docker', core: true },
+      { name: 'MinIO' },
+      { name: 'Docker' },
       { name: 'TanStack Query', core: true },
       { name: 'Zustand', core: true },
       { name: 'Sentry' },
