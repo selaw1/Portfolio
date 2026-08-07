@@ -1,0 +1,13 @@
+# Browsers only apply an XSL stylesheet when it is served as XML. Cloudflare
+# Pages would otherwise hand this back as octet-stream and silently fall back
+# to raw XML. Deliberately no `no-transform` here — that would stop Cloudflare
+# injecting the Web Analytics beacon.
+/rss.xsl
+  Content-Type: text/xsl; charset=utf-8
+
+# application/xml, not application/rss+xml: browsers only parse the response as
+# XML — and therefore only honour the xml-stylesheet instruction — for a generic
+# XML type. With application/rss+xml Chrome renders the source as plain text.
+# Feed readers sniff the body and accept this type without complaint.
+/rss.xml
+  Content-Type: application/xml; charset=utf-8
