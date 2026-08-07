@@ -62,6 +62,9 @@ export default function ContactForm() {
         setStatus('idle');
         return;
       }
+      // Surfaced in devtools so a failure can be identified without guessing.
+      if (body?.code) console.error('[contact] server said:', body.code);
+
       if (!isJson) {
         throw new Error(
           `The form endpoint isn't responding (HTTP ${res.status}). Email me directly in the meantime.`
