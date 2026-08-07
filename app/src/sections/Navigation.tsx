@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Sun, Moon } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { AnimatePresence, m, useReducedMotion } from 'motion/react';
-import { useTheme } from '../contexts/ThemeContext';
+import { ThemeTogglerButton } from '../components/animate-ui/buttons/theme-toggler';
 
 const navLinks = [
   { label: 'about', href: '#about' },
@@ -16,7 +16,6 @@ const navLinks = [
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const reduced = useReducedMotion();
@@ -96,11 +95,11 @@ export default function Navigation() {
               </Link>
             ))}
             <span aria-hidden="true" className="w-px h-5 bg-border mx-2" />
-            <ThemeToggle onToggle={toggleTheme} />
+            <ThemeTogglerButton direction="ttb" />
           </div>
 
           <div className="flex items-center gap-1 md:hidden">
-            <ThemeToggle onToggle={toggleTheme} />
+            <ThemeTogglerButton direction="ttb" />
             <button
               onClick={() => setIsMobileMenuOpen((v) => !v)}
               className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors focus-ring cursor-pointer"
@@ -151,19 +150,3 @@ export default function Navigation() {
   );
 }
 
-/**
- * The icon is driven by the `dark` class rather than React state, so the
- * prerendered markup is identical whichever theme the visitor lands in.
- */
-function ThemeToggle({ onToggle }: { onToggle: () => void }) {
-  return (
-    <button
-      onClick={onToggle}
-      className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors duration-200 focus-ring cursor-pointer"
-      aria-label="Toggle colour theme"
-    >
-      <Sun className="w-4 h-4 hidden dark:block" aria-hidden="true" />
-      <Moon className="w-4 h-4 block dark:hidden" aria-hidden="true" />
-    </button>
-  );
-}
