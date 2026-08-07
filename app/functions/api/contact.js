@@ -16,13 +16,9 @@
  * HTML page, which tells the sender nothing and tells me less.
  */
 
-/**
- * Both overridable from the Cloudflare environment, so the sending identity
- * can be changed without a deploy — useful while a domain is still pending
- * verification, when only `onboarding@resend.dev` is allowed.
- */
-const DEFAULT_TO = 'yousef@selawii.com';
-const DEFAULT_FROM = 'Portfolio <contact@selawii.com>';
+const TO = 'yousef@selawii.com';
+// Must be a verified domain in Resend, otherwise the send is rejected with a 403.
+const FROM = 'Portfolio <contact@selawii.com>';
 
 const LIMITS = { name: 100, email: 200, message: 5000 };
 
@@ -88,9 +84,6 @@ async function handle({ request, env }) {
   const { errors, clean } = validate(data);
   if (Object.keys(errors).length) return json(422, { code: 'invalid', errors });
 
-  const from = env.CONTACT_FROM || DEFAULT_FROM;
-  const to = env.CONTACT_TO || DEFAULT_TO;
-
   let res;
   try {
     res = await fetch('https://api.resend.com/emails', {
@@ -100,8 +93,8 @@ async function handle({ request, env }) {
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        from,
-        to: [to],
+        from: FROM,
+        to: [TO],
         // So replying in the mail client goes straight back to them.
         reply_to: clean.email,
         subject: `Portfolio — ${clean.name}`,
@@ -133,9 +126,8 @@ async function handle({ request, env }) {
     console.error('[contact] Resend rejected the send', res.status, detail);
     if (res.status === 403) {
       console.error(
-        `[contact] 403 means Resend will not send as "${from}". Verify that domain in ` +
-        'Resend, check the API key is not scoped to a different one, or set CONTACT_FROM ' +
-        'to "onboarding@resend.dev" to test the rest of the path.'
+        `[contact] 403 means Resend will not send as "${FROM}". Check that the exact ` +
+        'domain is verified and that the API key is not scoped to a different one.'
       );
     }
     return json(502, {
