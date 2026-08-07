@@ -10,6 +10,10 @@
  *   wrangler pages secret put RESEND_API_KEY
  * or in the Cloudflare dashboard under Settings → Environment variables, as an
  * *encrypted* variable. For local dev, put it in .dev.vars (gitignored).
+ *
+ * Every exit is a JSON response carrying a `code`. Nothing is allowed to throw
+ * out of the handler: an uncaught error here becomes an opaque Cloudflare 502
+ * HTML page, which tells the sender nothing and tells me less.
  */
 
 const TO = 'yousef@selawii.com';
@@ -53,18 +57,24 @@ function validate(data) {
   return { errors, clean: { name, email, message } };
 }
 
-export async function onRequestPost({ request, env }) {
+async function handle({ request, env }) {
   if (!env.RESEND_API_KEY) {
-    // Configuration problem, not the sender's problem — say so without detail.
-    console.error('RESEND_API_KEY is not set on this environment');
-    return json(500, { error: "The form isn't configured yet. Email me directly instead." });
+    console.error('[contact] RESEND_API_KEY is not set on this environment');
+    return json(500, {
+      code: 'no_key',
+      error: "The form isn't configured yet. Email me directly instead.",
+    });
   }
 
   let data;
   try {
     data = await request.json();
   } catch {
-    return json(400, { error: 'Malformed request.' });
+    return json(400, { code: 'bad_json', error: 'Malformed request.' });
+  }
+  // `JSON.parse("null")` is null, and reading a property off it would throw.
+  if (data === null || typeof data !== 'object') {
+    return json(400, { code: 'bad_json', error: 'Malformed request.' });
   }
 
   // Honeypot: a field hidden from humans. Anything that fills it is a bot, and
@@ -72,34 +82,67 @@ export async function onRequestPost({ request, env }) {
   if (data.company) return json(200, { ok: true });
 
   const { errors, clean } = validate(data);
-  if (Object.keys(errors).length) return json(422, { errors });
+  if (Object.keys(errors).length) return json(422, { code: 'invalid', errors });
 
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      authorization: `Bearer ${env.RESEND_API_KEY}`,
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      from: FROM,
-      to: [TO],
-      // So replying in the mail client goes straight back to them.
-      reply_to: clean.email,
-      subject: `Portfolio — ${clean.name}`,
-      html: `
-        <p><strong>From:</strong> ${escapeHtml(clean.name)} &lt;${escapeHtml(clean.email)}&gt;</p>
-        <hr />
-        <p style="white-space:pre-wrap">${escapeHtml(clean.message)}</p>
-      `,
-      text: `From: ${clean.name} <${clean.email}>\n\n${clean.message}`,
-    }),
-  });
+  let res;
+  try {
+    res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        authorization: `Bearer ${env.RESEND_API_KEY}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: FROM,
+        to: [TO],
+        // So replying in the mail client goes straight back to them.
+        reply_to: clean.email,
+        subject: `Portfolio — ${clean.name}`,
+        html: `
+          <p><strong>From:</strong> ${escapeHtml(clean.name)} &lt;${escapeHtml(clean.email)}&gt;</p>
+          <hr />
+          <p style="white-space:pre-wrap">${escapeHtml(clean.message)}</p>
+        `,
+        text: `From: ${clean.name} <${clean.email}>\n\n${clean.message}`,
+      }),
+    });
+  } catch (err) {
+    // Couldn't reach Resend at all. Left uncaught this became a Cloudflare 502.
+    console.error('[contact] fetch to Resend threw:', err?.stack ?? String(err));
+    return json(502, {
+      code: 'upstream_unreachable',
+      error: "Couldn't reach the mail service. Email me directly instead.",
+    });
+  }
 
   if (!res.ok) {
     // Log the upstream detail, return none of it — it can carry account info.
-    console.error('Resend rejected the send', res.status, await res.text());
-    return json(502, { error: "That didn't send. Try again, or email me directly." });
+    let detail = '';
+    try {
+      detail = await res.text();
+    } catch {
+      detail = '(body unreadable)';
+    }
+    console.error('[contact] Resend rejected the send', res.status, detail);
+    return json(502, {
+      code: 'upstream_rejected',
+      error: "That didn't send. Try again, or email me directly.",
+    });
   }
 
   return json(200, { ok: true });
+}
+
+export async function onRequestPost(context) {
+  try {
+    return await handle(context);
+  } catch (err) {
+    // The last line of defence. Anything reaching here would otherwise surface
+    // as a Cloudflare error page with no explanation on either side.
+    console.error('[contact] unhandled:', err?.stack ?? String(err));
+    return json(500, {
+      code: 'unhandled',
+      error: 'Something broke on my side. Email me directly instead.',
+    });
+  }
 }
