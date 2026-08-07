@@ -13,8 +13,8 @@ export default function Harakti() {
         Harakti (<span lang="ar" dir="rtl">حركتي</span>, "my movement") is a gym tracker for people
         who train seriously and live in two languages. You log sets, reps, weight and RIR mid-workout,
         it tracks your PRs and weekly volume per muscle, and it keeps a streak that promotes you
-        through eleven tiers. It's on Google Play and the web, it's free, and it works identically in
-        English and Arabic.
+        through eleven tiers. It's on the App Store, Google Play and the web, it's free, and it works
+        identically in English and Arabic.
       </p>
 
       <p>

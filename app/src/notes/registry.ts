@@ -51,12 +51,12 @@ export const WORK: WorkMeta[] = [
   {
     slug: 'harakti',
     title: 'Harakti',
-    tagline: 'A bilingual gym tracker, shipped on Android and the web.',
+    tagline: 'A bilingual gym tracker, shipped on iOS, Android and the web.',
     description:
       'Case study of Harakti, a bilingual English/Arabic gym tracking app: local-first session logging built for basement gyms with no signal, timezone-correct streaks with a rest-day grace period, and the leaderboard tradeoff I shipped on purpose.',
     blurb:
       'Local-first logging for gyms with no signal, streaks that survive rest days, and a leaderboard I shipped knowing exactly where it breaks.',
-    period: 'Shipped 2026 · Android + web',
+    period: 'Shipped 2026 · iOS + Android + web',
     role: 'Solo — product, backend, frontend, mobile',
     stack: [
       'Django', 'Django Ninja', 'PostgreSQL', 'Celery', 'LavinMQ',

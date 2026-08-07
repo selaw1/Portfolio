@@ -5,7 +5,8 @@ import SectionLabel from '../components/SectionLabel';
 
 const featured = {
   title: 'Harakti',
-  tagline: 'Bilingual gym tracker · Android + web',
+  tagline: 'Bilingual gym tracker',
+  platforms: ['iOS', 'Android', 'Web'],
   description:
     "Local-first logging built for gyms with no signal, streaks that survive rest days, and a leaderboard I shipped knowing exactly where it breaks. Solo — product, backend, frontend and the mobile shell.",
   image: '/work/harakti/receipt.webp',
@@ -56,6 +57,18 @@ export default function Projects() {
                 <p className="font-mono text-xs uppercase tracking-[0.18em] text-primary mb-4">
                   {featured.tagline}
                 </p>
+
+                <ul className="flex flex-wrap gap-2 mb-5" aria-label="Available on">
+                  {featured.platforms.map((platform) => (
+                    <li
+                      key={platform}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-primary/25 bg-primary/10 text-xs font-medium text-foreground"
+                    >
+                      <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full bg-primary" />
+                      {platform}
+                    </li>
+                  ))}
+                </ul>
                 <h3 className="font-display font-bold text-foreground text-3xl sm:text-4xl mb-4 tracking-tight">
                   {featured.title}
                 </h3>

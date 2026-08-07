@@ -9,7 +9,7 @@ import SectionLabel from '../components/SectionLabel';
  */
 const stats = [
   { value: 4, suffix: '+', label: 'Years shipping production systems' },
-  { value: 1, suffix: '', label: 'Product shipped, live on Google Play' },
+  { value: 1, suffix: '', label: 'Product shipped, live on iOS and Android' },
   { value: 2, suffix: '', label: 'Languages, full RTL' },
 ];
 

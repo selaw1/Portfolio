@@ -70,8 +70,8 @@ const groups: { icon: typeof Code2; name: string; span: string; items: Skill[] }
     span: 'lg:col-span-4',
     items: [
       { name: 'Tailwind CSS', core: true },
-      { name: 'shadcn/ui' },
-      { name: 'Bootstrap' },
+      { name: 'shadcn/ui', core: true },
+      { name: 'Bootstrap', core: true },
     ],
   },
   {
