@@ -46,19 +46,28 @@ export default function ContactForm() {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ ...values, company: honeypot.current?.value ?? '' }),
       });
-      const body = await res.json().catch(() => ({}));
+      // A missing Function means Cloudflare serves the 404 *page* here, so the
+      // body is HTML. Check before parsing, or every deployment problem looks
+      // identical to every server problem.
+      const isJson = (res.headers.get('content-type') ?? '').includes('application/json');
+      const body = isJson ? await res.json().catch(() => ({})) : null;
 
       if (res.ok) {
         setStatus('sent');
         setValues({ name: '', email: '', message: '' });
         return;
       }
-      if (body.errors) {
+      if (body?.errors) {
         setErrors(body.errors);
         setStatus('idle');
         return;
       }
-      throw new Error(body.error ?? 'Something went wrong.');
+      if (!isJson) {
+        throw new Error(
+          `The form endpoint isn't responding (HTTP ${res.status}). Email me directly in the meantime.`
+        );
+      }
+      throw new Error(body?.error ?? `Something went wrong (HTTP ${res.status}).`);
     } catch (err) {
       setFailure(err instanceof Error ? err.message : 'Something went wrong.');
       setStatus('error');

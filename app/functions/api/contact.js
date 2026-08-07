@@ -103,8 +103,3 @@ export async function onRequestPost({ request, env }) {
 
   return json(200, { ok: true });
 }
-
-/** Anything other than POST. */
-export async function onRequest() {
-  return json(405, { error: 'Method not allowed.' });
-}
