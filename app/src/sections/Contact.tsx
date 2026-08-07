@@ -2,6 +2,7 @@ import { Linkedin, Github, Mail, MapPin, ArrowUpRight } from 'lucide-react';
 import { Reveal } from '../components/Reveal';
 import { StarsBackground } from '../components/animate-ui/backgrounds/stars';
 import SectionLabel from '../components/SectionLabel';
+import ContactForm from '../components/ContactForm';
 
 const EMAIL = 'yousef@selawii.com';
 
@@ -42,14 +43,22 @@ export default function Contact() {
         </Reveal>
 
         <Reveal index={2}>
-          <a
-            href={`mailto:${EMAIL}`}
-            className="group inline-flex items-center gap-3 px-7 min-h-[56px] rounded-xl bg-primary text-primary-foreground font-semibold transition-transform duration-200 hover:-translate-y-0.5 focus-ring cursor-pointer mb-10"
-          >
-            <Mail className="w-5 h-5" aria-hidden="true" />
-            {EMAIL}
-            <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
-          </a>
+          <div className="max-w-xl mx-auto mb-10 rounded-2xl border border-border bg-card/60 backdrop-blur-sm p-6 sm:p-8">
+            <ContactForm />
+          </div>
+        </Reveal>
+
+        <Reveal index={2}>
+          <p className="text-sm text-muted-foreground mb-10">
+            Or just email me at{' '}
+            <a
+              href={`mailto:${EMAIL}`}
+              className="text-primary hover:underline focus-ring rounded inline-flex items-center gap-1"
+            >
+              {EMAIL}
+              <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
+            </a>
+          </p>
         </Reveal>
 
         <Reveal index={3}>
