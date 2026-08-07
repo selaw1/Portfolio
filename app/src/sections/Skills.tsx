@@ -1,123 +1,83 @@
-import { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Server, Database, MonitorSmartphone, Boxes } from 'lucide-react';
+import { Reveal } from '../components/Reveal';
+import SectionLabel from '../components/SectionLabel';
 
-gsap.registerPlugin(ScrollTrigger);
-
-const skills = [
-  { name: 'Python',         category: 'Language'  },
-  { name: 'JavaScript',     category: 'Language'  },
-  { name: 'TypeScript',     category: 'Language'  },
-  { name: 'HTML',           category: 'Language'  },
-  { name: 'CSS',            category: 'Language'  },
-  { name: 'SCSS',           category: 'Language'  },
-  { name: 'Django',         category: 'Framework' },
-  { name: 'Django Ninja',   category: 'Framework' },
-  { name: 'React',          category: 'Framework' },
-  { name: 'Next.js',        category: 'Framework' },
-  { name: 'Vite',           category: 'Framework' },
-  { name: 'Astro',          category: 'Framework' },
-  { name: 'Capacitor',          category: 'Framework' },
-  { name: 'PostgreSQL',     category: 'Database'  },
-  { name: 'TimescaleDB',    category: 'Database'  },
-  { name: 'MinIO',          category: 'Tools'     },
-  { name: 'Celery',         category: 'Tools'     },
-  { name: 'RabbitMQ',       category: 'Tools'     },
-  { name: 'LavinMQ',        category: 'Tools'     },
-  { name: 'Zustand',        category: 'Tools'     },
-  { name: 'TanStack Query', category: 'Tools'     },
-  { name: 'Sentry',         category: 'Tools'     },
-  { name: 'Git',            category: 'Tools'     },
-  { name: 'Tailwind CSS',   category: 'UI'        },
-  { name: 'shadcn/ui',      category: 'UI'        },
-  { name: 'Bootstrap',      category: 'UI'        },
-  { name: 'Linux (Arch)',   category: 'OS'        },
+/**
+ * Deliberately short. These are the things I'd defend under questioning —
+ * a longer list reads as recall, not depth.
+ */
+const groups = [
+  {
+    icon: Server,
+    name: 'Backend',
+    items: ['Python', 'Django', 'Django Ninja', 'Celery'],
+  },
+  {
+    icon: Database,
+    name: 'Data',
+    items: ['PostgreSQL', 'TimescaleDB', 'RabbitMQ', 'MinIO'],
+  },
+  {
+    icon: MonitorSmartphone,
+    name: 'Frontend',
+    items: ['TypeScript', 'React', 'TanStack Query', 'Zustand'],
+  },
+  {
+    icon: Boxes,
+    name: 'Platform',
+    items: ['Docker', 'Capacitor', 'Sentry', 'Linux'],
+  },
 ];
 
-const ALL = 'All';
-const categories = [ALL, ...Array.from(new Set(skills.map((s) => s.category)))];
-
 export default function Skills() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const tagsRef = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(ALL);
-
-  const visible = active === ALL ? skills : skills.filter((s) => s.category === active);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: 'top 80%',
-        once: true,
-        onEnter: () => {
-          const els = sectionRef.current?.querySelectorAll('[data-animate]') ?? [];
-          gsap.fromTo(Array.from(els),
-            { opacity: 0, y: 16 },
-            { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out', stagger: 0.05 }
-          );
-        },
-      });
-    }, sectionRef);
-    return () => ctx.revert();
-  }, []);
-
-  // Re-animate tags on category change
-  useEffect(() => {
-    if (!tagsRef.current) return;
-    const tags = tagsRef.current.querySelectorAll('[data-tag]');
-    gsap.fromTo(Array.from(tags),
-      { opacity: 0, scale: 0.9 },
-      { opacity: 1, scale: 1, duration: 0.25, ease: 'power2.out', stagger: 0.02 }
-    );
-  }, [active]);
-
   return (
-    <section
-      id="skills"
-      ref={sectionRef}
-      className="py-28 lg:py-36 bg-secondary/30"
-    >
+    <section id="stack" className="relative py-28 lg:py-36 bg-background">
       <div className="max-w-6xl mx-auto px-6 lg:px-10">
+        <SectionLabel>stack</SectionLabel>
 
-        {/* Label */}
-        <p data-animate className="font-mono text-xs text-muted-foreground mb-4 tracking-widest uppercase">
-          <span className="text-primary">//</span> skills
-        </p>
+        <Reveal>
+          <h2
+            className="font-display font-bold text-foreground mb-4"
+            style={{ fontSize: 'clamp(2rem, 4.5vw, 3.25rem)', letterSpacing: '-0.03em' }}
+          >
+            What I reach for
+          </h2>
+        </Reveal>
 
-        {/* Headline */}
-        <h2
-          data-animate
-          className="font-display font-bold text-foreground mb-10"
-          style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', letterSpacing: '-0.025em' }}
-        >
-          Technologies I work with
-        </h2>
+        <Reveal index={1}>
+          <p className="text-muted-foreground leading-relaxed max-w-xl mb-14">
+            A short list on purpose. These are the tools I've shipped and
+            debugged in production, not everything I've opened a tutorial for.
+          </p>
+        </Reveal>
 
-        {/* Category filter */}
-        <div data-animate className="flex flex-wrap gap-2 mb-10" role="group" aria-label="Filter skills by category">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActive(cat)}
-              className={`px-4 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 cursor-pointer focus-ring ${
-                active === cat
-                  ? 'bg-primary/15 text-primary border-primary/40'
-                  : 'bg-transparent text-muted-foreground border-border hover:border-primary/30 hover:text-foreground'
-              }`}
-              aria-pressed={active === cat}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {groups.map(({ icon: Icon, name, items }, i) => (
+            <Reveal
+              key={name}
+              index={i}
+              className="rounded-2xl border border-border bg-card p-6 hover:border-primary/35 transition-colors duration-200"
             >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {/* Tag cloud */}
-        <div ref={tagsRef} className="flex flex-wrap gap-2">
-          {visible.map((skill) => (
-            <span key={skill.name} data-tag className="tag cursor-default">
-              {skill.name}
-            </span>
+              <div className="flex items-center gap-2.5 mb-5">
+                <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 text-primary">
+                  <Icon className="w-4 h-4" aria-hidden="true" />
+                </span>
+                <h3 className="font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground">
+                  {name}
+                </h3>
+              </div>
+              <ul className="flex flex-col gap-2.5">
+                {items.map((item) => (
+                  <li key={item} className="flex items-center gap-2.5 text-sm text-foreground">
+                    <span
+                      aria-hidden="true"
+                      className="w-1 h-1 rounded-full bg-primary/70 shrink-0"
+                    />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
           ))}
         </div>
       </div>

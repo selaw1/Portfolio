@@ -1,123 +1,99 @@
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Database, Layers, Languages } from 'lucide-react';
+import { Reveal } from '../components/Reveal';
+import { CountingNumber } from '../components/animate-ui/text/counting-number';
+import SectionLabel from '../components/SectionLabel';
 
-gsap.registerPlugin(ScrollTrigger);
-
+/**
+ * Every figure here is checkable: years since Oct 2021, the two products
+ * linked further down the page, and the two languages Harakti ships in.
+ */
 const stats = [
-  { value: '4+',   label: 'Years of experience' },
-  { value: '1M+',  label: 'Data rows handled' },
-  { value: '20+',  label: 'Dashboards shipped' },
-  { value: '50+',  label: 'APIs built' },
+  { value: 4, suffix: '+', label: 'Years shipping production systems' },
+  { value: 2, suffix: '', label: 'Products shipped and live' },
+  { value: 2, suffix: '', label: 'Languages, full RTL' },
 ];
 
 const capabilities = [
   {
-    title: 'Full-Stack Engineering',
-    desc: 'Building end-to-end systems — from schema design to polished UI — using Django, React, and TypeScript.',
+    icon: Database,
+    title: 'Data that stays fast',
+    body: 'Dual-database architectures on PostgreSQL and TimescaleDB — hypertables, continuous aggregates, compression — so time-series queries stay flat as the table grows.',
   },
   {
-    title: 'Data & Performance',
-    desc: 'Optimising queries and dual-database architectures (PostgreSQL + TimescaleDB) to serve millions of rows quickly.',
+    icon: Layers,
+    title: 'End-to-end ownership',
+    body: 'Schema design through to the interface. Django and Django Ninja on the back, React and TypeScript on the front, and the async pipelines wiring them together.',
   },
-
+  {
+    icon: Languages,
+    title: 'Built for two directions',
+    body: 'Arabic as a first-class target rather than a locale file — full right-to-left layout reaching into charts, calendars and every asymmetric value in the codebase.',
+  },
 ];
 
 export default function About() {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const els = sectionRef.current?.querySelectorAll('[data-animate]') ?? [];
-      els.forEach((el) => {
-        ScrollTrigger.create({
-          trigger: el,
-          start: 'top 86%',
-          once: true,
-          onEnter: () => {
-            gsap.fromTo(el,
-              { opacity: 0, y: 20 },
-              { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out' }
-            );
-          },
-        });
-      });
-    }, sectionRef);
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section
-      id="about"
-      ref={sectionRef}
-      className="py-28 lg:py-36 bg-background"
-    >
+    <section id="about" className="relative py-28 lg:py-36 bg-background">
       <div className="max-w-6xl mx-auto px-6 lg:px-10">
+        <SectionLabel>about</SectionLabel>
 
-        {/* Section label */}
-        <p data-animate className="font-mono text-xs text-muted-foreground mb-4 tracking-widest uppercase">
-          <span className="text-primary">//</span> about
-        </p>
+        <Reveal>
+          <h2
+            className="font-display font-bold text-foreground mb-8 max-w-3xl"
+            style={{ fontSize: 'clamp(2rem, 4.5vw, 3.25rem)', letterSpacing: '-0.03em' }}
+          >
+            I build things that hold up{' '}
+            <span className="gradient-text">at production scale</span>
+          </h2>
+        </Reveal>
 
-        {/* Headline */}
-        <h2
-          data-animate
-          className="font-display font-bold text-foreground mb-12"
-          style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', letterSpacing: '-0.025em' }}
-        >
-          Building things that<br />
-          <span className="gradient-text">scale and perform</span>
-        </h2>
+        <Reveal index={1}>
+          <div className="grid gap-6 lg:grid-cols-2 mb-16 max-w-4xl">
+            <p className="text-muted-foreground leading-relaxed">
+              I'm a software engineer at{' '}
+              <span className="text-foreground font-medium">Kalvad</span> in Dubai, where I've
+              worked since October 2021 on data platforms for government clients — the kind where
+              a slow dashboard is somebody's actual afternoon.
+            </p>
+            <p className="text-muted-foreground leading-relaxed">
+              Outside that I ship my own products. Harakti is a bilingual gym tracker on Google
+              Play and the web, built solo end to end. It's where I get to make the architectural
+              calls and then live with them.
+            </p>
+          </div>
+        </Reveal>
 
-        {/* Stats strip */}
-        <div
-          data-animate
-          className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border rounded-xl overflow-hidden mb-16"
-        >
-          {stats.map((s) => (
-            <div key={s.label} className="bg-background px-6 py-7 flex flex-col gap-1">
-              <span className="font-display font-bold text-primary" style={{ fontSize: '2.25rem', letterSpacing: '-0.03em' }}>
-                {s.value}
-              </span>
-              <span className="text-xs text-muted-foreground font-medium">{s.label}</span>
-            </div>
+        {/* Stats */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-border rounded-2xl overflow-hidden mb-16">
+          {stats.map((s, i) => (
+            <Reveal key={s.label} index={i} className="bg-card px-6 py-8">
+              <div
+                className="font-display font-bold text-primary tabular-nums mb-1.5"
+                style={{ fontSize: '2.75rem', letterSpacing: '-0.04em' }}
+              >
+                <CountingNumber number={s.value} />
+                {s.suffix}
+              </div>
+              <p className="text-sm text-muted-foreground leading-snug">{s.label}</p>
+            </Reveal>
           ))}
         </div>
 
-        {/* Two-column layout */}
-        <div className="grid lg:grid-cols-2 gap-14 items-start">
-
-          {/* Bio prose */}
-          <div>
-            <p data-animate className="text-muted-foreground leading-relaxed mb-4 text-base">
-              I'm a Software Engineer at{' '}
-              <span className="text-foreground font-medium">Kalvad</span> in Dubai, where I have worked since October 2021.
-              I architect and maintain web applications and data systems used by thousands of people daily.
-            </p>
-            <p data-animate className="text-muted-foreground leading-relaxed text-base">
-              I care deeply about clean code, observable systems, and shipping software that actually works at scale.
-              Outside of work I enjoy exploring new tools and reading about distributed systems design.
-            </p>
-          </div>
-
-          {/* Capability cards */}
-          <div className="flex flex-col gap-4">
-            {capabilities.map((cap, i) => (
-              <div
-                key={cap.title}
-                data-animate
-                className="card-solid rounded-xl p-5 border-accent-l hover:border-primary/40 hover:bg-secondary/30 transition-colors duration-200"
-                style={{ transitionDelay: `${i * 40}ms` }}
-              >
-                <h3 className="font-display font-semibold text-foreground text-base mb-1.5">
-                  {cap.title}
-                </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {cap.desc}
-                </p>
+        {/* Capabilities */}
+        <div className="grid gap-4 md:grid-cols-3">
+          {capabilities.map(({ icon: Icon, title, body }, i) => (
+            <Reveal
+              key={title}
+              index={i}
+              className="group relative rounded-2xl border border-border bg-card p-6 hover:border-primary/40 transition-colors duration-200"
+            >
+              <div className="mb-4 inline-flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 text-primary">
+                <Icon className="w-5 h-5" aria-hidden="true" />
               </div>
-            ))}
-          </div>
+              <h3 className="font-display font-semibold text-foreground text-base mb-2">{title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{body}</p>
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>

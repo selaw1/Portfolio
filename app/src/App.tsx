@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { LazyMotion, MotionConfig, domAnimation } from 'motion/react';
 import { ThemeProvider } from './contexts/ThemeContext';
 import Navigation from './sections/Navigation';
 import Footer from './sections/Footer';
@@ -11,9 +10,6 @@ import NPlusOne from './pages/notes/NPlusOne';
 import Harakti from './pages/work/Harakti';
 import NotFound from './pages/NotFound';
 import { metaForPath } from './lib/meta';
-import './App.css';
-
-gsap.registerPlugin(ScrollTrigger);
 
 /**
  * The prerenderer writes the correct <head> into every emitted page, so this
@@ -35,22 +31,11 @@ function useRouteMeta() {
 
     // Anchors on the homepage own their own scroll position.
     if (!hash) window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
-    ScrollTrigger.refresh();
   }, [pathname, hash]);
 }
 
 function Layout() {
   useRouteMeta();
-
-  useEffect(() => {
-    ScrollTrigger.defaults({ toggleActions: 'play none none none' });
-    const handleResize = () => ScrollTrigger.refresh();
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      ScrollTrigger.getAll().forEach((st) => st.kill());
-    };
-  }, []);
 
   return (
     <div className="min-h-screen bg-background transition-colors duration-300">
@@ -78,7 +63,16 @@ function Layout() {
 export default function App() {
   return (
     <ThemeProvider>
-      <Layout />
+      {/* domAnimation covers animations, gestures and whileInView. It leaves
+          out the layout-projection engine, which nothing here uses. */}
+      <LazyMotion features={domAnimation} strict>
+        {/* Motion drops transform animations for users who ask for reduced
+            motion, while still settling elements on their final opacity —
+            so nothing is left invisible. */}
+        <MotionConfig reducedMotion="user">
+          <Layout />
+        </MotionConfig>
+      </LazyMotion>
     </ThemeProvider>
   );
 }

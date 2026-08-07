@@ -1,14 +1,14 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, Sun, Moon } from 'lucide-react';
-import gsap from 'gsap';
+import { AnimatePresence, m, useReducedMotion } from 'motion/react';
 import { useTheme } from '../contexts/ThemeContext';
 
 const navLinks = [
   { label: 'about', href: '#about' },
-  { label: 'skills', href: '#skills' },
+  { label: 'work', href: '#work' },
+  { label: 'stack', href: '#stack' },
   { label: 'experience', href: '#experience' },
-  { label: 'projects', href: '#projects' },
   { label: 'notes', href: '/notes' },
   { label: 'contact', href: '#contact' },
 ];
@@ -19,10 +19,7 @@ export default function Navigation() {
   const { toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
-  const navRef = useRef<HTMLElement>(null);
-  const logoRef = useRef<HTMLAnchorElement>(null);
-  const linksRef = useRef<(HTMLAnchorElement | null)[]>([]);
-  const mobileLinksRef = useRef<(HTMLAnchorElement | null)[]>([]);
+  const reduced = useReducedMotion();
 
   const onHome = location.pathname === '/';
 
@@ -33,24 +30,7 @@ export default function Navigation() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(logoRef.current,
-        { opacity: 0, x: -16 },
-        { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out', delay: 0.15 }
-      );
-      linksRef.current.forEach((el, i) => {
-        if (!el) return;
-        gsap.fromTo(el,
-          { opacity: 0, y: -8 },
-          { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out', delay: 0.2 + i * 0.04 }
-        );
-      });
-    });
-    return () => ctx.revert();
-  }, []);
-
-  // Close the menu, restore scroll, and wire up Escape while it's open.
+  // Lock scroll and wire up Escape while the mobile menu is open.
   useEffect(() => {
     if (!isMobileMenuOpen) return;
 
@@ -61,20 +41,9 @@ export default function Navigation() {
     document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', onKey);
 
-    const ctx = gsap.context(() => {
-      mobileLinksRef.current.forEach((el, i) => {
-        if (!el) return;
-        gsap.fromTo(el,
-          { opacity: 0, x: -24 },
-          { opacity: 1, x: 0, duration: 0.3, ease: 'power2.out', delay: 0.05 + i * 0.06 }
-        );
-      });
-    });
-
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', onKey);
-      ctx.revert();
     };
   }, [isMobileMenuOpen]);
 
@@ -85,7 +54,7 @@ export default function Navigation() {
 
     e.preventDefault();
     if (onHome) {
-      document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+      document.querySelector(href)?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
     } else {
       navigate(`/${href}`);
     }
@@ -96,44 +65,44 @@ export default function Navigation() {
   return (
     <>
       <nav
-        ref={navRef}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled || !onHome ? 'nav-blur border-b border-border' : 'bg-transparent'
         }`}
       >
         <div className="max-w-6xl mx-auto px-6 lg:px-10 flex items-center justify-between h-16">
           <Link
-            ref={logoRef}
             to="/"
             aria-label="Yousef Selawi — home"
             className="flex items-center focus-ring rounded-md cursor-pointer"
           >
-            <span className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-primary/10 border border-primary/25 text-primary text-sm font-bold font-display tracking-tight">
+            <span className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10 border border-primary/25 text-primary text-sm font-bold font-display tracking-tight transition-colors duration-200 hover:bg-primary/20">
               YS
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-7">
-            {navLinks.map((link, i) => (
+          <div className="hidden md:flex items-center gap-1">
+            {navLinks.map((link) => (
               <Link
                 key={link.href}
-                ref={(el) => { linksRef.current[i] = el; }}
                 to={linkTarget(link.href)}
                 onClick={(e) => handleNav(e, link.href)}
-                className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 group focus-ring rounded cursor-pointer"
+                className="relative px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 group focus-ring rounded-md cursor-pointer"
               >
                 {link.label}
-                <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-primary transition-all duration-200 group-hover:w-full" />
+                <span
+                  aria-hidden="true"
+                  className="absolute bottom-1 left-3 right-3 h-px origin-left scale-x-0 bg-primary transition-transform duration-200 group-hover:scale-x-100"
+                />
               </Link>
             ))}
-
+            <span aria-hidden="true" className="w-px h-5 bg-border mx-2" />
             <ThemeToggle onToggle={toggleTheme} />
           </div>
 
           <div className="flex items-center gap-1 md:hidden">
             <ThemeToggle onToggle={toggleTheme} />
             <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              onClick={() => setIsMobileMenuOpen((v) => !v)}
               className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors focus-ring cursor-pointer"
               aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isMobileMenuOpen}
@@ -144,27 +113,40 @@ export default function Navigation() {
         </div>
       </nav>
 
-      {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-40 md:hidden flex flex-col">
-          <div
-            className="absolute inset-0 bg-background/95 backdrop-blur-xl"
-            onClick={() => setIsMobileMenuOpen(false)}
-          />
-          <div className="relative z-10 flex flex-col justify-center items-start px-10 h-full gap-2 mt-16">
-            {navLinks.map((link, i) => (
-              <Link
-                key={link.href}
-                ref={(el) => { mobileLinksRef.current[i] = el; }}
-                to={linkTarget(link.href)}
-                onClick={(e) => handleNav(e, link.href)}
-                className="text-4xl font-display font-semibold text-foreground/70 hover:text-primary transition-colors duration-200 py-2 cursor-pointer focus-ring rounded"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <m.div
+            className="fixed inset-0 z-40 md:hidden"
+            initial={reduced ? undefined : { opacity: 0 }}
+            animate={reduced ? undefined : { opacity: 1 }}
+            exit={reduced ? undefined : { opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div
+              className="absolute inset-0 bg-background/95 backdrop-blur-xl"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+            <div className="relative z-10 flex flex-col justify-center items-start px-10 h-full gap-1 mt-16">
+              {navLinks.map((link, i) => (
+                <m.div
+                  key={link.href}
+                  initial={reduced ? undefined : { opacity: 0, x: -20 }}
+                  animate={reduced ? undefined : { opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.05 + i * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <Link
+                    to={linkTarget(link.href)}
+                    onClick={(e) => handleNav(e, link.href)}
+                    className="block text-4xl font-display font-semibold text-foreground/70 hover:text-primary transition-colors duration-200 py-2 cursor-pointer focus-ring rounded"
+                  >
+                    {link.label}
+                  </Link>
+                </m.div>
+              ))}
+            </div>
+          </m.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
