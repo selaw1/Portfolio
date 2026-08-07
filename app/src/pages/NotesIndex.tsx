@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Reveal } from '../components/Reveal';
-import { ArrowLeft, ArrowUpRight } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, Rss } from 'lucide-react';
 import { NOTES, formatNoteDate, notePath } from '../notes/registry';
 
 export default function NotesIndex() {
@@ -29,6 +29,16 @@ export default function NotesIndex() {
           time-series data. Each one is built around a demo you can drive rather than a code listing
           you read.
         </p>
+
+        <Reveal>
+          <a
+            href="/rss.xml"
+            className="inline-flex items-center gap-2 mb-10 px-4 min-h-[44px] rounded-lg border border-border bg-card text-sm font-medium text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors duration-200 focus-ring cursor-pointer"
+          >
+            <Rss className="w-4 h-4" aria-hidden="true" />
+            Subscribe by RSS
+          </a>
+        </Reveal>
 
         <div className="flex flex-col gap-4">
           {NOTES.map((note, i) => (

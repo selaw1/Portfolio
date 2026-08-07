@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = join(root, 'dist');
 
-const { render, ROUTES, metaForPath, SITE_URL } = await import(
+const { render, ROUTES, metaForPath, SITE_URL, NOTES, notePath } = await import(
   join(distDir, '..', 'dist-ssr', 'entry-server.js')
 );
 
@@ -136,5 +136,42 @@ await writeFile(
   `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`,
   'utf-8'
 );
+
+/**
+ * RSS 2.0 for the notes. Readers and aggregators poll this instead of the
+ * page, so a new note reaches subscribers without them checking back.
+ * Built from the same registry that drives the routes and the sitemap.
+ */
+const rfc822 = (iso) =>
+  new Date(`${iso}T00:00:00Z`).toUTCString();
+
+const byNewest = [...NOTES].sort((a, b) => b.date.localeCompare(a.date));
+
+const rss = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Yousef Selawi — Notes</title>
+    <link>${SITE_URL}/notes</link>
+    <description>Short technical notes on Django, PostgreSQL and TimescaleDB, each built around a demo you can drive.</description>
+    <language>en</language>
+    <atom:link href="${SITE_URL}/rss.xml" rel="self" type="application/rss+xml" />
+${byNewest.length ? `    <lastBuildDate>${rfc822(byNewest[0].date)}</lastBuildDate>` : ''}
+${byNewest
+  .map((n) => {
+    const url = `${SITE_URL}${notePath(n.slug)}`;
+    return `    <item>
+      <title>${escape(n.title)}</title>
+      <link>${url}</link>
+      <guid isPermaLink="true">${url}</guid>
+      <pubDate>${rfc822(n.date)}</pubDate>
+      <description>${escape(n.description)}</description>
+    </item>`;
+  })
+  .join('\n')}
+  </channel>
+</rss>
+`;
+await writeFile(join(distDir, 'rss.xml'), rss, 'utf-8');
+console.log(`  wrote rss.xml (${byNewest.length} items)`);
 
 console.log(`  wrote sitemap.xml (${ROUTES.length} urls) and robots.txt`);

@@ -1,8 +1,6 @@
-import CaseStudyLayout, { Shot, ShotPair } from '../../components/CaseStudyLayout';
+import CaseStudyLayout from '../../components/CaseStudyLayout';
 import StreakDemo from '../../notes/StreakDemo';
 import { workBySlug } from '../../notes/registry';
-
-const S = '/work/harakti';
 
 export default function Harakti() {
   const meta = workBySlug('harakti')!;
@@ -23,13 +21,6 @@ export default function Harakti() {
         shipped the worse implementation on purpose.
       </p>
 
-      <ShotPair
-        shots={[
-          { src: `${S}/home-dark.webp`, alt: 'Harakti home screen with streak calendar and weight trend' },
-          { src: `${S}/live-logging-dark.webp`, alt: 'Live set logging with reps, weight, RIR and rest timer' },
-        ]}
-        caption="Home and the live logging screen. Real screenshots from a production account, not mockups."
-      />
 
       <h2>1. The gym has no signal</h2>
 
@@ -128,13 +119,6 @@ onSuccess: (data) => {
     .exclude(source=ActivitySource.EXPLICIT_NATIVE, workout_log__isnull=True)`}
       </pre>
 
-      <ShotPair
-        shots={[
-          { src: `${S}/streak-calendar.webp`, alt: 'Monthly streak calendar showing trained days' },
-          { src: `${S}/volume-radar-light.webp`, alt: 'Weekly training volume per muscle group as a radar chart' },
-        ]}
-        caption="The streak calendar, and weekly volume per muscle group against a target range."
-      />
 
       <h2>3. The leaderboard I shipped knowing it was wrong</h2>
 
@@ -172,11 +156,6 @@ onSuccess: (data) => {
         <em>and</em> cheap to replace, because the streak logic it calls stays exactly where it is.
       </p>
 
-      <Shot
-        src={`${S}/leaderboard-dark.webp`}
-        alt="Monthly leaderboard with a podium and ranked list"
-        caption="Country and friends-only leaderboards. Your own rank is pinned regardless of position."
-      />
 
       <h2>Arabic is not a translation layer</h2>
 
@@ -193,11 +172,6 @@ onSuccess: (data) => {
         Arabic reads like a gym app instead of like a documentation page.
       </p>
 
-      <Shot
-        src={`${S}/arabic-dashboard.webp`}
-        alt="Harakti dashboard in Arabic with full right-to-left layout"
-        caption="The same dashboard in Arabic — full RTL layout, native copy, identical feature set."
-      />
 
       <h2>Smaller decisions worth the space</h2>
 
