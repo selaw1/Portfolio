@@ -7,6 +7,9 @@ import Footer from './sections/Footer';
 import Home from './pages/Home';
 import NotesIndex from './pages/NotesIndex';
 import NPlusOne from './pages/notes/NPlusOne';
+import TimezoneDay from './pages/notes/TimezoneDay';
+import ContinuousAggregates from './pages/notes/ContinuousAggregates';
+import StreamingExports from './pages/notes/StreamingExports';
 import Harakti from './pages/work/Harakti';
 import NotFound from './pages/NotFound';
 import { metaForPath } from './lib/meta';
@@ -51,6 +54,9 @@ function Layout() {
           <Route path="/" element={<Home />} />
           <Route path="/notes" element={<NotesIndex />} />
           <Route path="/notes/n-plus-one" element={<NPlusOne />} />
+          <Route path="/notes/what-day-is-it" element={<TimezoneDay />} />
+          <Route path="/notes/continuous-aggregates" element={<ContinuousAggregates />} />
+          <Route path="/notes/streaming-exports" element={<StreamingExports />} />
           <Route path="/work/harakti" element={<Harakti />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

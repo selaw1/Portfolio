@@ -31,6 +31,39 @@ export const NOTES: NoteMeta[] = [
     readingMinutes: 4,
     tags: ['Django', 'PostgreSQL', 'Performance'],
   },
+  {
+    slug: 'what-day-is-it',
+    title: 'What day is it?',
+    description:
+      'A calendar day is a property of a place, not of a timestamp. An interactive look at why timezone-naive date truncation only breaks for the users furthest from you — and never in your tests.',
+    blurb:
+      'Why "did this happen today?" is a harder question than it looks, and only wrong for your most distant users.',
+    date: '2026-08-07',
+    readingMinutes: 4,
+    tags: ['Django', 'PostgreSQL', 'Correctness'],
+  },
+  {
+    slug: 'continuous-aggregates',
+    title: 'The dashboard that gets slower every day',
+    description:
+      'A time-series dashboard does more work every day without anyone changing the code. How TimescaleDB continuous aggregates and compression flatten that curve, and the refresh-policy decision most write-ups skip.',
+    blurb:
+      'Your dashboard is not fast, it is new. What continuous aggregates fix, and the tradeoff nobody mentions.',
+    date: '2026-08-07',
+    readingMinutes: 6,
+    tags: ['TimescaleDB', 'PostgreSQL', 'Performance'],
+  },
+  {
+    slug: 'streaming-exports',
+    title: "Export to CSV, and other ways to kill a container",
+    description:
+      'Why the obvious CSV export holds every row in memory three times over, how streaming the response and the queryset together makes peak memory constant, and when an export should stop being a request at all.',
+    blurb:
+      'It works for a year, then someone with a real account clicks it. Making peak memory a constant.',
+    date: '2026-08-07',
+    readingMinutes: 5,
+    tags: ['Django', 'Celery', 'MinIO'],
+  },
 ];
 
 export interface WorkMeta {

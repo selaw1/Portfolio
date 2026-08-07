@@ -106,15 +106,19 @@ export default function NPlusOneDemo() {
 
   // Stream the query log in so the pile-up is something you watch happen
   // rather than a number that was always there.
+  //
+  // Reduced motion fills it in a single frame rather than short-circuiting the
+  // render: `reduced` is false during SSR and true on the client, so deriving
+  // the rendered row count from it directly is a hydration mismatch.
   useEffect(() => {
-    if (reduced) return;
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
 
-    const duration = mode === 'naive' ? 900 : 400;
+    const duration = reduced ? 0 : mode === 'naive' ? 900 : 400;
     const start = performance.now();
 
     const tick = (now: number) => {
-      const t = Math.min(1, (now - start) / duration);
+      // Clamped at both ends: the rAF frame timestamp can predate `start`.
+      const t = duration === 0 ? 1 : Math.min(1, Math.max(0, (now - start) / duration));
       const eased = 1 - Math.pow(1 - t, 3);
       setRevealed(Math.ceil(eased * queries.length));
       if (t < 1) rafRef.current = requestAnimationFrame(tick);
@@ -127,7 +131,7 @@ export default function NPlusOneDemo() {
   }, [queries, mode, reduced]);
 
   // Clamped, since `revealed` lags a frame behind a change in query count.
-  const shown = reduced ? queries.length : Math.min(revealed, queries.length);
+  const shown = Math.min(revealed, queries.length);
   const visible = queries.slice(0, Math.min(shown, MAX_VISIBLE_ROWS));
   const hidden = Math.max(0, shown - MAX_VISIBLE_ROWS);
 
